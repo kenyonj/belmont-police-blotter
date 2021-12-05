@@ -1,0 +1,14 @@
+name: Grab latest PDF from BelmontPD.org
+on:
+  schedule:
+    - cron: "0 2 * * 0" # Every Sunday at 0200
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.6
+        bundler-cache: true
+    - run: bundle exec rake fetch_and_parse_all_pdfs
