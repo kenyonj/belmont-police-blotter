@@ -1,4 +1,4 @@
-name: Grab latest PDF from BelmontPD.org
+name: Grab and parse the latest PDFs from BelmontPD.org
 on:
   schedule:
     - cron: "0 2 * * 0" # Every Sunday at 0200
