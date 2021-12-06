@@ -3,10 +3,11 @@ class FileParser
   NEW_INCIDENT_SEPARATOR =
     "==========================================================================="
 
-  attr_reader :file_listing, :incidents
+  attr_reader :file_listing, :incidents, :coordinate_finder
 
-  def initialize(file_listing)
+  def initialize(file_listing, coordinate_finder:)
     @file_listing = file_listing
+    @coordinate_finder = coordinate_finder
   end
 
   def parse
@@ -22,32 +23,18 @@ class FileParser
 
       incidents = reader.pages.flat_map do |page|
         raw_incidents = page.text.gsub("\n", ";;;").gsub(/=+/m, ",").split(",").reject(&:empty?)
-        raw_incidents.map { |ri| Incident.new(ri) }
+        raw_incidents.map { |ri| Incident.new(ri, coordinate_finder: coordinate_finder) }
       end
 
       incidents.each do |incident|
+        json["incidents"] ||= []
         json["incidents"] << incident.to_h
       end
     else
       puts "--- SKIPPING, TIME RANGE ALREADY PARSED: #{file_listing.time_range} ---"
     end
 
+    puts "--- DONE PARSING: #{file_listing.time_range} ---"
     File.write(JSON_DB_FILE, JSON.dump(json))
-  end
-
-  class Incident
-    attr_reader :incident_number
-
-    def initialize(raw_incident)
-      @incident_number = raw_incident[/\d{8}/]
-      @raw_incident = raw_incident
-    end
-
-    def to_h
-      {
-        number: incident_number,
-        date_it_happened: "today",
-      }
-    end
   end
 end

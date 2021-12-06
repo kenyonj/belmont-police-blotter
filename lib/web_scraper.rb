@@ -1,8 +1,12 @@
 class WebScraper
   URL_FOR_POLICE_BLOTTER = "https://www.belmontpd.org/resident-resources/pages/police-blotter"
 
-  def self.process
-    new.process
+  def initialize(coordinate_finder)
+    @coordinate_finder = coordinate_finder
+  end
+
+  def self.process(coordinate_finder)
+    new(coordinate_finder).process
   end
 
   def process
@@ -13,7 +17,11 @@ class WebScraper
       nodes = node.find_css(".field-name-field-file-attachment span.file")
 
       file_listings = nodes.map { |node| FileListing.new(node) }
-      pending_parsings = file_listings.map { |file_listing| FileParser.new(file_listing) }
+
+      pending_parsings = file_listings.map do |file_listing|
+        FileParser.new(file_listing, coordinate_finder: coordinate_finder)
+      end
+
       fetch(file_listings)
       parse(pending_parsings)
     else
@@ -22,6 +30,8 @@ class WebScraper
   end
 
   private
+
+  attr_reader :coordinate_finder
 
   def fetch(file_listings)
     file_listings.each(&:fetch)
