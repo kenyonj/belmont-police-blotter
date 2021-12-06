@@ -38,6 +38,13 @@ class WebScraper
   end
 
   def parse(pending_parsings)
-    pending_parsings.each(&:parse)
+    pending_parsings.each do |pending_parsing|
+      pending_parsing.parse
+      
+      10.times do |n|
+        puts "Sleeping for #{n + 1}/10 seconds to cool down map api usage..."
+        sleep(1)
+      end
+    end
   end
 end

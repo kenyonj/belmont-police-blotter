@@ -11,20 +11,31 @@ class Incident
     @coordinate_finder = coordinate_finder
   end
 
-  def to_h
-    {
-      number: number,
-      date_time: date_time,
-      street_name: street_name&.gsub(WHITESPACE_ONLY, " "),
-      latitude: latitude,
-      longitude: longitude,
-      type: type&.gsub(WHITESPACE_ONLY, " "),
-    }
+  def to_markdown_with_front_matter
+    [
+      "---",
+      "number: #{number}",
+      "date_time: #{date_time}",
+      "location: #{location}",
+      "latitude: #{latitude}",
+      "longitude: #{longitude}",
+      "type: #{type.gsub(WHITESPACE_ONLY, " ")}",
+      "google_maps_link: https://maps.google.com/?q=#{latitude},#{longitude}",
+      "---",
+      "",
+      raw_incident,
+    ]
   end
 
-  private
+  def date_time
+    @_date_time ||= begin
+      raw_date_time = raw_incident.split("Date:").last.split("Type:").first
+      raw_date = raw_date_time[RAW_DATE_FORMAT]&.gsub(/\D/, "-") || "1970-01-01"
+      raw_time = raw_date_time[RAW_TIME_FORMAT] || "12:00:00"
 
-  attr_reader :raw_incident, :coordinate_finder
+      DateTime.parse("#{raw_date} #{raw_time} #{TZ}")
+    end
+  end
 
   def number
     @_number ||= raw_incident.
@@ -32,32 +43,32 @@ class Incident
       split("#:").last[/\d+/]
   end
 
-  def date_time
-    @_date_time ||= begin
-      raw_date_time = raw_incident.split("Date:").last.split("Type:").first
-      raw_date = raw_date_time[RAW_DATE_FORMAT]&.gsub(/\D/, "-")
-      raw_time = raw_date_time[RAW_TIME_FORMAT]
+  private
 
-      return unless raw_date && raw_time
+  attr_reader :raw_incident, :coordinate_finder
 
-      DateTime.parse("#{raw_date} #{raw_time} #{TZ}")
+  def location
+    @_location ||= begin
+      raw_location = raw_incident.
+        split("Location:").last.
+        split(";;;").first&.
+        [](1..-1)&.
+        gsub("\xC2\xA0", " ")
+
+      if raw_location&.include?("&") || !(raw_location =~ /\d+/)
+        raw_location
+      else
+        raw_location&.[](/\d+\s\D+\s\D+/)
+      end
     end
   end
 
-  def street_name
-    @_street_name ||= raw_incident.
-      split("Location:").last.
-      split(";;;").first&.
-      [](RAW_STREET_FORMAT)&.
-      gsub(/\s/, " ")
-  end
-
   def latitude
-    coordinate_finder.from_address(street_name)&.first
+    coordinate_finder.from_address(location)&.first
   end
 
   def longitude
-    coordinate_finder.from_address(street_name)&.last
+    coordinate_finder.from_address(location)&.last
   end
 
   def type
@@ -65,6 +76,6 @@ class Incident
       split("Type:").last.
       split(";;;").first&.
       [](RAW_TYPE_FORMAT)&.
-      gsub(/\s/, " ")
+      gsub(/\s/, " ") || "UNKNOWN TYPE"
   end
 end

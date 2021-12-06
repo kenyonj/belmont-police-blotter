@@ -35,6 +35,7 @@ GEM
     faraday-net_http_persistent (1.2.0)
     faraday-patron (1.0.0)
     faraday-rack (1.0.0)
+    fileutils (1.6.0)
     geocoder (1.7.0)
     hashery (2.1.2)
     json (2.6.1)
@@ -87,6 +88,7 @@ PLATFORMS
 DEPENDENCIES
   capybara
   faraday
+  fileutils
   geocoder
   json
   pdf-reader

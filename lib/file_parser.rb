@@ -1,7 +1,5 @@
 class FileParser
-  JSON_DB_FILE = "db/json/data.json"
-  NEW_INCIDENT_SEPARATOR =
-    "==========================================================================="
+  DIRECTORY_DATE_FORMAT = "%Y/%m/%d"
 
   attr_reader :file_listing, :incidents, :coordinate_finder
 
@@ -11,13 +9,7 @@ class FileParser
   end
 
   def parse
-    file = File.read(JSON_DB_FILE)
-    json = JSON.parse(file)
-
     if file_listing.fetched?
-      json["time_range"] ||= []
-      json["time_range"] << file_listing.time_range
-
       File.open(file_listing.file_name, "wb") { |f| f.write(file_listing.pdf) }
       reader = PDF::Reader.new(file_listing.file_name)
 
@@ -27,14 +19,30 @@ class FileParser
       end
 
       incidents.each do |incident|
-        json["incidents"] ||= []
-        json["incidents"] << incident.to_h
+        conditionally_create_directory(incident)
+
+        File.open(full_file_name_path_for(incident), "wb") do |file|
+          file.puts(incident.to_markdown_with_front_matter)
+        end
       end
     else
       puts "--- SKIPPING, TIME RANGE ALREADY PARSED: #{file_listing.time_range} ---"
     end
 
     puts "--- DONE PARSING: #{file_listing.time_range} ---"
-    File.write(JSON_DB_FILE, JSON.dump(json))
+  end
+
+  private
+
+  def full_file_name_path_for(incident)
+    "incidents/#{incident.date_time.strftime(DIRECTORY_DATE_FORMAT)}/#{incident.number}.md"
+  end
+
+  def conditionally_create_directory(incident)
+    dirname = File.dirname(full_file_name_path_for(incident))
+
+    unless File.directory?(dirname)
+      FileUtils.mkdir_p(dirname)
+    end
   end
 end

@@ -1,7 +1,6 @@
 class FileListing
   EXISTING_DATE_FORMAT = "%m-%d-%y"
   NEW_DATE_FORMAT = "%Y-%m-%d"
-  JSON_DB_FILE = "db/json/data.json"
   OUTPUT_PATH = "db/pdfs/"
 
   attr_reader :start_date, :end_date, :pdf_href, :pdf
@@ -15,7 +14,7 @@ class FileListing
   end
 
   def fetch
-    if time_range_exists? && file_exists?
+    if file_exists?
       @fetched = true
       @pdf = File.read(file_name)
     else
@@ -50,13 +49,6 @@ class FileListing
   end
 
   private
-
-  def time_range_exists?
-    file = File.read(JSON_DB_FILE)
-    json = JSON.parse(file)
-
-    json["time_range"]&.include?(time_range)
-  end
 
   def file_exists?
     File.file?(file_name)

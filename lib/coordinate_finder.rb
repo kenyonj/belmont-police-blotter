@@ -4,24 +4,21 @@ class CoordinateFinder
   BELMONT_ZIP = "02478"
 
   def initialize
-    @city = BELMONT
-    @state = BELMONT_STATE
-    @zip = BELMONT_ZIP
+    @from_addresses = {}
   end
 
   def from_address(street)
-    @_from_address ||= {}
-    @_from_address[street] ||= begin
+    from_addresses[street] ||= begin
       location = Geocoder.search(combined_location(street))
-      @_from_address[street] = location.first&.coordinates
+      from_addresses[street] = location.first&.coordinates
     end
   end
 
   private
 
-  attr_reader :city, :state, :zip
+  attr_reader :from_addresses
 
   def combined_location(street)
-    "#{street}, #{city}, #{state} #{zip}"
+    "#{street}, #{BELMONT}, #{BELMONT_STATE} #{BELMONT_ZIP}"
   end
 end
