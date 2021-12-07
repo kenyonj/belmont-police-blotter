@@ -13,12 +13,17 @@ collections:
     permalink: /:collection/:path/
 
 exclude:
-  - db
-  - lib
-  - spec
-  - .github
   - .git
+  - .github
   - .gitignore
   - Gemfile
   - Gemfile.lock
+  - db/
+  - lib/
+  - node_modules
   - rakefile.rb
+  - spec/
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
