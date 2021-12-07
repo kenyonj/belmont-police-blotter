@@ -1,8 +1,10 @@
 title: Belmont Police Blotter Feed
+description: Feed for Belmont Police Incident Reports
 
 markdown: kramdown
 
 github_username: kenyonj
+repository: kenyonj/belmont-police-blotter
 
 plugins:
   - jekyll-feed
