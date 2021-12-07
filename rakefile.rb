@@ -1,15 +1,4 @@
-require "faraday"
-require "capybara"
-require "json"
-require "pdf-reader"
-require "geocoder"
-require "fileutils"
-
-require_relative "lib/web_scraper"
-require_relative "lib/file_parser"
-require_relative "lib/file_listing"
-require_relative "lib/incident"
-require_relative "lib/coordinate_finder"
+require_relative "lib/blotter"
 
 Geocoder.configure(lookup: :esri)
 

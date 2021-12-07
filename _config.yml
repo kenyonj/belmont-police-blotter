@@ -1,0 +1,24 @@
+title: Belmont Police Blotter Feed
+
+markdown: kramdown
+
+github_username: kenyonj
+
+plugins:
+  - jekyll-feed
+
+collections:
+  incidents:
+    output: true
+    permalink: /:collection/:path/
+
+exclude:
+  - db
+  - lib
+  - spec
+  - .github
+  - .git
+  - .gitignore
+  - Gemfile
+  - Gemfile.lock
+  - rakefile.rb

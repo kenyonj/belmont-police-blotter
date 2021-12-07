@@ -1,0 +1,12 @@
+require "faraday"
+require "capybara"
+require "json"
+require "pdf-reader"
+require "geocoder"
+require "fileutils"
+
+require_relative "blotter/web_scraper"
+require_relative "blotter/file_parser"
+require_relative "blotter/file_listing"
+require_relative "blotter/incident"
+require_relative "blotter/coordinate_finder"
