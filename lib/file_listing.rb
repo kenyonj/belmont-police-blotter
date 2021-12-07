@@ -51,12 +51,11 @@ class FileListing
   def previously_parsed?
     return @_previously_parsed if defined?(@_previously_parsed)
 
-    parsed_dates = {}
 
-    (start_date..end_date).each do |date|
-      parsed_dates[date.strftime("%Y")] ||= {}
-      parsed_dates[date.strftime("%Y")][date.strftime("%m")] ||= []
-      parsed_dates[date.strftime("%Y")][date.strftime("%m")] << date.strftime("%d")
+    parsed_dates = (start_date..end_date).each_with_object(
+      Hash.new { |outer_h, outer_k| outer_h[outer_k] = Hash.new { |h, k| h[k] = [] } },
+    ) do |date, dates|
+      dates[date.strftime("%Y")][date.strftime("%m")] << date.strftime("%d")
     end
 
     directories_exist = parsed_dates.keys.flat_map do |year|

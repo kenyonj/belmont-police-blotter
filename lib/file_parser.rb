@@ -23,8 +23,14 @@ class FileParser
       incidents.each do |incident|
         conditionally_create_directory(incident)
 
-        File.open(full_file_name_path_for(incident), "wb") do |file|
-          file.puts(incident.to_markdown_with_front_matter)
+        if incident_already_exists?(incident)
+          puts "--- ALREADY EXISTS INCIDENT # #{incident.number} ---"
+        else
+          File.open(full_file_name_path_for(incident), "wb") do |file|
+            file.puts(incident.to_markdown_with_front_matter)
+          end
+
+          puts "--- SAVED INCIDENT # #{incident.number} ---"
         end
       end
     else
@@ -46,5 +52,9 @@ class FileParser
     unless File.directory?(dirname)
       FileUtils.mkdir_p(dirname)
     end
+  end
+
+  def incident_already_exists?(incident)
+    File.file?(full_file_name_path_for(incident))
   end
 end

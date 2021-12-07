@@ -4,6 +4,7 @@ class WebScraper
 
   def initialize(coordinate_finder)
     @coordinate_finder = coordinate_finder
+    @cooldowns = 0
   end
 
   def self.process(coordinate_finder)
@@ -40,12 +41,14 @@ class WebScraper
 
   def parse(pending_parsings)
     pending_parsings.each do |pending_parsing|
-      unless pending_parsing.file_listing.previously_parsed?
+      unless pending_parsing.file_listing.previously_parsed? || @cooldowns == 0
         WAIT_TIME_BETWEEN_FILE_PARSING_IN_SECONDS.times do |n|
           puts "Sleeping for #{n + 1}/#{WAIT_TIME_BETWEEN_FILE_PARSING_IN_SECONDS} "\
             "seconds to cool down map api usage..."
           sleep(1)
         end
+
+        @cooldowns += 1
       end
 
       pending_parsing.parse
