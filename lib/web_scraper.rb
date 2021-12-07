@@ -1,5 +1,6 @@
 class WebScraper
   URL_FOR_POLICE_BLOTTER = "https://www.belmontpd.org/resident-resources/pages/police-blotter"
+  WAIT_TIME_BETWEEN_FILE_PARSING_IN_SECONDS = 10
 
   def initialize(coordinate_finder)
     @coordinate_finder = coordinate_finder
@@ -39,12 +40,15 @@ class WebScraper
 
   def parse(pending_parsings)
     pending_parsings.each do |pending_parsing|
-      pending_parsing.parse
-      
-      10.times do |n|
-        puts "Sleeping for #{n + 1}/10 seconds to cool down map api usage..."
-        sleep(1)
+      unless pending_parsing.file_listing.previously_parsed?
+        WAIT_TIME_BETWEEN_FILE_PARSING_IN_SECONDS.times do |n|
+          puts "Sleeping for #{n + 1}/#{WAIT_TIME_BETWEEN_FILE_PARSING_IN_SECONDS} "\
+            "seconds to cool down map api usage..."
+          sleep(1)
+        end
       end
+
+      pending_parsing.parse
     end
   end
 end

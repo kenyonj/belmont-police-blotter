@@ -14,12 +14,12 @@ class FileListing
   end
 
   def fetch
-    if file_exists?
+    if pdf_file_exists?
       @fetched = true
       @pdf = File.read(file_name)
     else
       puts "--- FETCHING start: #{start_date} -- end: #{end_date} ---"
-      if file_exists?
+      if pdf_file_exists?
         @fetched = true
         @pdf = File.read(file_name)
       else
@@ -48,9 +48,31 @@ class FileListing
     !!@fetched
   end
 
+  def previously_parsed?
+    return @_previously_parsed if defined?(@_previously_parsed)
+
+    parsed_dates = {}
+
+    (start_date..end_date).each do |date|
+      parsed_dates[date.strftime("%Y")] ||= {}
+      parsed_dates[date.strftime("%Y")][date.strftime("%m")] ||= []
+      parsed_dates[date.strftime("%Y")][date.strftime("%m")] << date.strftime("%d")
+    end
+
+    directories_exist = parsed_dates.keys.flat_map do |year|
+      parsed_dates[year].keys.flat_map do |month|
+        parsed_dates[year][month].flat_map do |day|
+          File.directory?("incidents/#{year}/#{month}/#{day}")
+        end
+      end
+    end
+
+    @_previously_parsed = directories_exist.all?
+  end
+
   private
 
-  def file_exists?
+  def pdf_file_exists?
     File.file?(file_name)
   end
 end

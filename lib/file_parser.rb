@@ -9,7 +9,9 @@ class FileParser
   end
 
   def parse
-    if file_listing.fetched?
+    puts "--- STARTING PARSING: #{file_listing.time_range} ---"
+
+    if file_listing.fetched? && !file_listing.previously_parsed?
       File.open(file_listing.file_name, "wb") { |f| f.write(file_listing.pdf) }
       reader = PDF::Reader.new(file_listing.file_name)
 
