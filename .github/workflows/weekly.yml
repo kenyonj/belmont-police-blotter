@@ -1,5 +1,6 @@
 name: Grab and parse the latest PDFs from BelmontPD.org
 on:
+  workflow_dispatch:
   schedule:
     - cron: "0 2 * * 0" # Every Sunday at 0200
 jobs:
