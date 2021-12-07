@@ -12,3 +12,7 @@ jobs:
         ruby-version: 2.6
         bundler-cache: true
     - run: bundle exec rake fetch_and_parse_all_pdfs
+    - name: Commit changes
+      uses: elstudio/actions-js-build/commit@v4
+      with:
+        commitMessage: Add newly parsed incidents
