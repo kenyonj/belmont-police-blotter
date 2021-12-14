@@ -7,9 +7,20 @@ class FileListing
 
   def initialize(node)
     link = node.css("a")
-    @start_date, @end_date = link.inner_html.split(".").first.split("_to_").map { |d| Date.parse d }
-    # @start_date = Date.strptime(start_date, EXISTING_DATE_FORMAT)
-    # @end_date = Date.strptime(end_date, EXISTING_DATE_FORMAT)
+    start_date, end_date = link.inner_html.split(".").first.split("_to_")
+
+    @start_date = if start_date.split("-").last.size == 4
+      Date.strptime(start_date, EXISTING_DATE_FORMAT.gsub("y", "Y"))
+    else
+      Date.strptime(start_date, EXISTING_DATE_FORMAT)
+    end
+
+    @end_date = if end_date.split("-").last.size == 4
+      Date.strptime(end_date, EXISTING_DATE_FORMAT.gsub("y", "Y"))
+    else
+      Date.strptime(end_date, EXISTING_DATE_FORMAT)
+    end
+
     @pdf_href = link.first.attributes["href"].value
   end
 
