@@ -3,6 +3,10 @@ name: Build and Publish Jekyll for GitHub Pages
 on:
   workflow_dispatch:
   push:
+  workflow_run:
+    workflows: ["Grab and parse the latest PDFs from BelmontPD.org"]
+    types:
+      - completed
 
 jobs:
   jekyll:
