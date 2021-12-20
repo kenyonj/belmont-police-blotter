@@ -2,7 +2,7 @@ name: Grab and parse the latest PDFs from BelmontPD.org
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 5 * * 1" # Every Monday at 0500 UTC
+    - cron: "0 5 * * *" # Every day at 0500 UTC
 jobs:
   run:
     runs-on: ubuntu-latest
