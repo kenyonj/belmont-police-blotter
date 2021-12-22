@@ -71,10 +71,10 @@
         const countContainer = document.getElementById("incident-count");
 
         if (countContainer) {
-            countContainer.innerText = count;
+            countContainer.innerText = count.toLocaleString();
         }
     }
 </script>
-<h3>Last <span id="incident-count">20</span> Incidents:</h3>
+<h3><span id="incident-count"></span> Incidents:</h3>
 <div id="dvMap" style="width: 700px; height: 500px">
 </div>
