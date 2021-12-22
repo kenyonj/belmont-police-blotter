@@ -51,7 +51,7 @@
                 return data.items.map(({ date, number, latitude, longitude, type }) => {
                     const realDate = new Date(date);
                     const year = realDate.getFullYear();
-                    const month = realDate.getMonth().toString().padStart(2, "0");
+                    const month = (realDate.getMonth() + 1).toString().padStart(2, "0");
                     const day = realDate.getDate().toString().padStart(2, "0");
 
                     return {
