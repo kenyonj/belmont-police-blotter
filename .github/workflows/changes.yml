@@ -21,8 +21,8 @@ jobs:
 
       - name: Page has changed
         run: exit 0
-        if: steps.cache.outputs.cache-hit != "true"
+        if: steps.cache.outputs.cache-hit != 'true'
 
       - name: Page has not changed
         run: exit 1
-        if: steps.cache.outputs.cache-hit == "true"
+        if: steps.cache.outputs.cache-hit == 'true'
