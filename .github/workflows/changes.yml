@@ -3,7 +3,7 @@ name: Check for changes
 on:
   workflow_dispatch:
   schedule:
-    - cron:  "0 * * * *" # Every hour
+    - cron:  "0 5 * * *" # Every hour
 
 jobs:
   check:
