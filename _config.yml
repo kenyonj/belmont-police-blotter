@@ -6,8 +6,11 @@ markdown: kramdown
 github_username: kenyonj
 repository: kenyonj/belmont-police-blotter
 
+base_url: /belmont-police-blotter
+
 plugins:
   - jekyll-feed
+  - jekyll-default-layout
 
 collections:
   incidents:
@@ -29,3 +32,10 @@ exclude:
   - vendor/cache/
   - vendor/gems/
   - vendor/ruby/
+
+defaults:
+  -
+    scope:
+      path: "_incidents"
+    values:
+      layout: "default"

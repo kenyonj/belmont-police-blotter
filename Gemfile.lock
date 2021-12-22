@@ -329,6 +329,7 @@ DEPENDENCIES
   fileutils
   geocoder
   github-pages
+  jekyll-default-layout
   jekyll-feed (~> 0.12)
   json
   minima (~> 2.5)
