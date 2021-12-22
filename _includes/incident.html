@@ -1,0 +1,12 @@
+<section>
+  <h1>Incident: {{ page.number }}</h1>
+  <h3>Date: {{ page.date_time | date: "%a, %B %d, %Y" }}</h3>
+  <h3>Time: {{ page.date_time | date: "%-I:%M:%S %p" }}</h3>
+  <h3>Type: {{ page.type }}</h1>
+</section>
+
+{% if page.longitude && page.latitude %}
+  <section>
+    {% include google-map.html %}
+  </section>
+{% endif %}

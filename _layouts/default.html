@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    {% if page.number %}
+      <title>Incident: {{ page.number }} - Belmont Police Blotter</title>
+    {% else %}
+      <title>Belmont Police Blotter</title>
+    {% endif %}
+  </head>
+  <body>
+    {% if page.number %}
+      {% include incident.html %}
+    {% else %}
+      {% include home.html %}
+    {% endif %}
+    <footer>
+      &copy; to me
+    </footer>
+  </body>
+</html>

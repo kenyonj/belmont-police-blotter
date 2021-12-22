@@ -7,19 +7,19 @@ permalink: incidents.json
   "feed_url": "{{ site.url }}/incidents.json",
   "expired": false,
   "items": [
-    {% assign sorted_incidents = site.incidents | sort: "date_time" | reverse %}
-    {% for incident in sorted_incidents %}
-      {
-        "number": {{ incident.number | jsonify }},
-        "google_maps_link": {{ incident.google_maps_link | jsonify }},
-        "date": {{ incident.date_time | date: "%a, %B %d, %Y" | jsonify }},
-        "time": {{ incident.date_time | date: "%-I:%M:%S %p" | jsonify }},
-        "location": {{ incident.location | jsonify }},
-        "latitude": {{ incident.latitude | jsonify }},
-        "longitude": {{ incident.longitude | jsonify }},
-        "type": {{ incident.type | jsonify }},
-        "raw_incident" : {{ incident.content | strip_html | jsonify }}
-      }{% unless forloop.last == true %},{% endunless %}
-    {% endfor %}
+  {%- assign sorted_incidents = site.incidents | sort: "date_time" | reverse -%}
+  {% for incident in sorted_incidents %}
+    {
+      "number": {{ incident.number | jsonify }},
+      "google_maps_link": {{ incident.google_maps_link | jsonify }},
+      "date": {{ incident.date_time | date: "%a, %B %d, %Y" | jsonify }},
+      "time": {{ incident.date_time | date: "%-I:%M:%S %p" | jsonify }},
+      "location": {{ incident.location | jsonify }},
+      "latitude": {{ incident.latitude | jsonify }},
+      "longitude": {{ incident.longitude | jsonify }},
+      "type": {{ incident.type | jsonify }},
+      "raw_incident" : {{ incident.content | strip_html | jsonify }}
+    }{%- unless forloop.last == true -%},{%- endunless -%}
+  {% endfor %}
   ]
 }
