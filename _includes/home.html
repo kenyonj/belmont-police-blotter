@@ -52,7 +52,7 @@
         return fetch(incidentsUrl).
             then(response => response.json()).
             then(data => {
-                return data.items.map(({ date, number, latitude, longitude, type }) => {
+                return data.items.map(({ date, number, latitude, longitude, type, location, time }) => {
                     const realDate = new Date(date);
                     const year = realDate.getFullYear();
                     const month = (realDate.getMonth() + 1).toString().padStart(2, "0");
@@ -62,7 +62,11 @@
                         "title": `Incident: ${number}`,
                         "lat": latitude,
                         "lng": longitude,
-                        "description": `Type: ${type}<br> More information: <a href='/belmont-police-blotter/incidents/${year}/${month}/${day}/${number}'>${number}</a>`,
+                        "description": `Type: ${type}<br>
+                        Date: ${year}/${month}/${day}<br>
+                        Time: ${time}<br>
+                        Location: ${location}<br>
+                        More information: <a href='/belmont-police-blotter/incidents/${year}/${month}/${day}/${number}'>${number}</a>`,
                     }
                 })
             }).
