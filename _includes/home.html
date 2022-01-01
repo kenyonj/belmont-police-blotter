@@ -44,6 +44,10 @@
         const params = Object.fromEntries(urlSearchParams.entries());
         const incidentsUrl = new URL("https://belmont-police-blotter-functions.vercel.app/api/index");
         Object.keys(params).forEach(key => incidentsUrl.searchParams.append(key, params[key]));
+        
+        if (!params.hasOwnProperty("limit")) {
+            incidentsUrl.searchParams.append("limit", 20)
+        }
 
         return fetch(incidentsUrl).
             then(response => response.json()).
