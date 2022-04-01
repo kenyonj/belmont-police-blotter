@@ -57,7 +57,7 @@
 
     const streetElement = document.getElementById("street-name-input")
 
-    if (streetElement) {
+    if (streetElement && params["distance_from"] != undefined) {
       streetElement.value = params["distance_from"]
     }
 
@@ -111,9 +111,11 @@
           <div class="col-lg-12 col-md-12 col-sm-12">
             <p class="mbr-text mbr-fonts-style mb-5 align-center display-7">Search below to get started</p>
           </div>
-          <div class="col-6 form-group mb-3">
-            <input placeholder="Street name with optional number" list="streets" name="distance_from"
-              id="street-name-input" class="form-control">
+        </div>
+        <div class="row">
+          <div class="col-4 form-group mb-3">
+            <input placeholder="Street with optional number" list="streets" name="distance_from" id="street-name-input"
+              class="form-control">
             <datalist id="streets">
               <option value="A ST">A ST</option>
               <option value="ACORN PARK DR">ACORN PARK DR</option>
