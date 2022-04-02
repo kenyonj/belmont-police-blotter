@@ -113,9 +113,15 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-4 form-group mb-3">
-            <input placeholder="Street with optional number" list="streets" name="distance_from" id="street-name-input"
-              class="form-control">
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="street-name-label">Street and optional number</span>
+            <input
+              list="streets"
+              name="distance_from"
+              class="form-control"
+              aria-label="Stree name and optional number"
+              aria-describedby="street-name-label"
+            >
             <datalist id="streets">
               <option value="A ST">A ST</option>
               <option value="ACORN PARK DR">ACORN PARK DR</option>
@@ -504,18 +510,29 @@
               <option value="YORK RD">YORK RD</option>
             </datalist>
           </div>
-          <div class="col-auto form-group mb-3">
-            <select name="distance_limit" class="form-select" aria-label="Default select example">
-              <option selected>Search Radius</option>
-              <option id="distance_limit-all" value="">All of Belmont</option>
+          <div class="input-group mb-3">
+            <span class="input-group-select" id="search-radius-label">Search radius</span>
+            <select
+              name="distance_limit"
+              class="form-select"
+              aria-label="Search radius"
+              aria-describedby="street-name-label"
+            >
+              <option selected id="distance_limit-all" value="">All of Belmont</option>
               <option id="distance_limit-0.1" value="0.1">0.10 miles</option>
               <option id="distance_limit-0.25" value="0.25">0.25 miles</option>
               <option id="distance_limit-0.5" value="0.5">0.5 miles</option>
               <option id="distance_limit-1" value="1">1 mile</option>
             </select>
           </div>
-          <div class="col-auto form-group mb-3">
-            <select name="month_number" class="form-select" aria-label="Default select example">
+          <div class="input-group mb-3">
+            <span class="input-group-select" id="month-label">Month</span>
+            <select
+              name="month_number"
+              class="form-select"
+              aria-label="Month"
+              aria-describedby="month-label"
+            >
               <option selected value="">All months</option>
               <option id="month_number-1" value="1">January</option>
               <option id="month_number-2" value="2">February</option>
@@ -531,18 +548,29 @@
               <option id="month_number-12" value="12">December</option>
             </select>
           </div>
-          <div class="col-auto form-group mb-3">
-            <select name="four_digit_year" class="form-select" aria-label="Default select example">
-              <option value="">All years</option>
+          <div class="input-group mb-3">
+            <span class="input-group-select" id="year-label">Year</span>
+            <select
+              name="four_digit_year"
+              class="form-select"
+              aria-label="Year"
+              aria-describedby="year-label"
+            >
+              <option selected value="">All years</option>
               <option id="four_digit_year-2022" selected value="2022">2022</option>
               <option id="four_digit_year-2021" value="2021">2021</option>
             </select>
           </div>
-          <div class="col-auto form-group mb-3">
-            <select name="limit" class="form-select" aria-label="Default select example">
-              <option selected value="">Limit Results (default: 20)</option>
+          <div class="input-group mb-3">
+            <span class="input-group-select" id="incident-limit-label">Incident limit</span>
+            <select
+              name="limit"
+              class="form-select"
+              aria-label="Incident limit"
+              aria-describedby="incident-limit-label"
+            >
               <option id="limit-10" value="10">10</option>
-              <option id="limit-20" value="20">20</option>
+              <option selected id="limit-20" value="20">20</option>
               <option id="limit-30" value="30">30</option>
               <option id="limit-40" value="40">40</option>
               <option id="limit-50" value="50">50</option>
