@@ -6,8 +6,6 @@ markdown: kramdown
 github_username: kenyonj
 repository: kenyonj/belmont-police-blotter
 
-base_url: /belmont-police-blotter
-
 plugins:
   - jekyll-feed
   - jekyll-default-layout
