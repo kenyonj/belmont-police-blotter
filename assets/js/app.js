@@ -55,8 +55,13 @@ function retrievePlots() {
 
   const streetElement = document.getElementById("street-name-input")
 
-  if (streetElement && params["distance_from"] != undefined) {
+  if (streetElement && params["distance_from"] != undefined && params["distance_from"] != "") {
     streetElement.value = params["distance_from"]
+    const streetFilterButton = document.getElementById("street-filter-button")
+
+    if (streetFilterButton) {
+      streetFilterButton.click()
+    }
   }
 
   if (!params.hasOwnProperty("limit")) {

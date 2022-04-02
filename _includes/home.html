@@ -8,80 +8,111 @@
           </div>
         </div>
         <div class="row">
-          <div class="input-group mb-3 col">
-            <span class="input-group-text" id="street-name-label">Street and optional number</span>
-            <input list="streets" name="distance_from" class="form-control" aria-label="Stree name and optional number"
-              aria-describedby="street-name-label">
-            <datalist id="streets"></datalist>
-          </div>
-          <div class="input-group mb-3 col">
-            <div class="input-group-prepend">
-              <label class="input-group-text" for="search-radius-selection">Search radius</label>
+          <div class="accordion mb-3" id="accordionPanelsStayOpenExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                  data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true"
+                  aria-controls="panelsStayOpen-collapseOne">
+                  Time Filters
+                </button>
+              </h2>
+              <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show"
+                aria-labelledby="panelsStayOpen-headingOne">
+                <div class="accordion-body">
+                  <div class="row">
+                    <div class="input-group mb-3 col">
+                      <div class="input-group-prepend">
+                        <label class="input-group-text" for="month-selection">Month</label>
+                      </div>
+                      <select name="month_number" class="form-select" aria-label="Month" aria-describedby="month-label"
+                        id="month-selection">
+                        <option selected value="">All months</option>
+                        <option id="month_number-1" value="1">January</option>
+                        <option id="month_number-2" value="2">February</option>
+                        <option id="month_number-3" value="3">March</option>
+                        <option id="month_number-4" value="4">April</option>
+                        <option id="month_number-5" value="5">May</option>
+                        <option id="month_number-6" value="6">June</option>
+                        <option id="month_number-7" value="7">July</option>
+                        <option id="month_number-8" value="8">August</option>
+                        <option id="month_number-9" value="9">September</option>
+                        <option id="month_number-10" value="10">October</option>
+                        <option id="month_number-11" value="11">November</option>
+                        <option id="month_number-12" value="12">December</option>
+                      </select>
+                    </div>
+                    <div class="input-group mb-3 col">
+                      <div class="input-group-prepend">
+                        <label class="input-group-text" for="year-selection">Year</label>
+                      </div>
+                      <select name="four_digit_year" class="form-select" aria-label="Year" aria-describedby="year-label"
+                        id="year-selection">
+                        <option selected value="">All years</option>
+                        <option id="four_digit_year-2022" selected value="2022">2022</option>
+                        <option id="four_digit_year-2021" value="2021">2021</option>
+                      </select>
+                    </div>
+                    <div class="input-group mb-3 col">
+                      <div class="input-group-prepend">
+                        <label class="input-group-text" for="incident-limit-selection">Incident limit</label>
+                      </div>
+                      <select name="limit" class="form-select" aria-label="Incident limit"
+                        aria-describedby="incident-limit-label" id="incident-limit-selection">
+                        <option id="limit-10" value="10">10</option>
+                        <option selected id="limit-20" value="20">20</option>
+                        <option id="limit-30" value="30">30</option>
+                        <option id="limit-40" value="40">40</option>
+                        <option id="limit-50" value="50">50</option>
+                        <option id="limit-60" value="60">60</option>
+                        <option id="limit-70" value="70">70</option>
+                        <option id="limit-80" value="80">80</option>
+                        <option id="limit-90" value="90">90</option>
+                        <option id="limit-100" value="100">100</option>
+                        <option id="limit-200" value="200">200</option>
+                        <option id="limit-300" value="300">300</option>
+                        <option id="limit-400" value="400">400</option>
+                        <option id="limit-500" value="500">500</option>
+                        <option id="limit-1000" value="1000">1,000</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <select name="distance_limit" class="form-select" id="search-radius-selection">
-              <option selected id="distance_limit-all" value="">All of Belmont</option>
-              <option id="distance_limit-0.1" value="0.1">0.10 miles</option>
-              <option id="distance_limit-0.25" value="0.25">0.25 miles</option>
-              <option id="distance_limit-0.5" value="0.5">0.5 miles</option>
-              <option id="distance_limit-1" value="1">1 mile</option>
-            </select>
-          </div>
-        </div>
-        <div class="row">
-          <div class="input-group mb-3 col">
-            <div class="input-group-prepend">
-              <label class="input-group-text" for="month-selection">Month</label>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                  data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" id="street-filter-button"
+                  aria-controls="panelsStayOpen-collapseTwo">
+                  Location Filters
+                </button>
+              </h2>
+              <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse"
+                aria-labelledby="panelsStayOpen-headingTwo">
+                <div class="accordion-body">
+                  <div class="row">
+                    <div class="input-group mb-3 col">
+                      <span class="input-group-text" id="street-name-label">Street name</span>
+                      <input list="streets" name="distance_from" class="form-control" id="street-name-input"
+                        aria-label="Stree name and optional number" aria-describedby="street-name-label">
+                      <datalist id="streets"></datalist>
+                    </div>
+                    <div class="input-group mb-3 col">
+                      <div class="input-group-prepend">
+                        <label class="input-group-text" for="search-radius-selection">Search radius</label>
+                      </div>
+                      <select name="distance_limit" class="form-select" id="search-radius-selection">
+                        <option id="distance_limit-0.1" value="0.1">0.10 miles</option>
+                        <option id="distance_limit-0.25" value="0.25">0.25 miles</option>
+                        <option id="distance_limit-0.5" value="0.5">0.5 miles</option>
+                        <option id="distance_limit-1" value="1">1 mile</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <select name="month_number" class="form-select" aria-label="Month" aria-describedby="month-label"
-              id="month-selection">
-              <option selected value="">All months</option>
-              <option id="month_number-1" value="1">January</option>
-              <option id="month_number-2" value="2">February</option>
-              <option id="month_number-3" value="3">March</option>
-              <option id="month_number-4" value="4">April</option>
-              <option id="month_number-5" value="5">May</option>
-              <option id="month_number-6" value="6">June</option>
-              <option id="month_number-7" value="7">July</option>
-              <option id="month_number-8" value="8">August</option>
-              <option id="month_number-9" value="9">September</option>
-              <option id="month_number-10" value="10">October</option>
-              <option id="month_number-11" value="11">November</option>
-              <option id="month_number-12" value="12">December</option>
-            </select>
-          </div>
-          <div class="input-group mb-3 col">
-            <div class="input-group-prepend">
-              <label class="input-group-text" for="year-selection">Year</label>
-            </div>
-            <select name="four_digit_year" class="form-select" aria-label="Year" aria-describedby="year-label"
-              id="year-selection">
-              <option selected value="">All years</option>
-              <option id="four_digit_year-2022" selected value="2022">2022</option>
-              <option id="four_digit_year-2021" value="2021">2021</option>
-            </select>
-          </div>
-          <div class="input-group mb-3 col">
-            <div class="input-group-prepend">
-              <label class="input-group-text" for="incident-limit-selection">Incident limit</label>
-            </div>
-            <select name="limit" class="form-select" aria-label="Incident limit" aria-describedby="incident-limit-label"
-              id="incident-limit-selection">
-              <option id="limit-10" value="10">10</option>
-              <option selected id="limit-20" value="20">20</option>
-              <option id="limit-30" value="30">30</option>
-              <option id="limit-40" value="40">40</option>
-              <option id="limit-50" value="50">50</option>
-              <option id="limit-60" value="60">60</option>
-              <option id="limit-70" value="70">70</option>
-              <option id="limit-80" value="80">80</option>
-              <option id="limit-90" value="90">90</option>
-              <option id="limit-100" value="100">100</option>
-              <option id="limit-200" value="200">200</option>
-              <option id="limit-300" value="300">300</option>
-              <option id="limit-400" value="400">400</option>
-              <option id="limit-500" value="500">500</option>
-              <option id="limit-1000" value="1000">1,000</option>
-            </select>
           </div>
         </div>
         <div class="row justify-content-md-center">
