@@ -115,13 +115,8 @@
         <div class="row">
           <div class="input-group mb-3">
             <span class="input-group-text" id="street-name-label">Street and optional number</span>
-            <input
-              list="streets"
-              name="distance_from"
-              class="form-control"
-              aria-label="Stree name and optional number"
-              aria-describedby="street-name-label"
-            >
+            <input list="streets" name="distance_from" class="form-control" aria-label="Stree name and optional number"
+              aria-describedby="street-name-label">
             <datalist id="streets">
               <option value="A ST">A ST</option>
               <option value="ACORN PARK DR">ACORN PARK DR</option>
@@ -511,13 +506,10 @@
             </datalist>
           </div>
           <div class="input-group mb-3">
-            <span class="input-group-select" id="search-radius-label">Search radius</span>
-            <select
-              name="distance_limit"
-              class="form-select"
-              aria-label="Search radius"
-              aria-describedby="street-name-label"
-            >
+            <div class="input-group-prepend">
+              <label class="input-group-text" for="search-radius-selection">Search radius</label>
+            </div>
+            <select name="distance_limit" class="custom-select" id="search-radius-selection">
               <option selected id="distance_limit-all" value="">All of Belmont</option>
               <option id="distance_limit-0.1" value="0.1">0.10 miles</option>
               <option id="distance_limit-0.25" value="0.25">0.25 miles</option>
@@ -526,13 +518,11 @@
             </select>
           </div>
           <div class="input-group mb-3">
-            <span class="input-group-select" id="month-label">Month</span>
-            <select
-              name="month_number"
-              class="form-select"
-              aria-label="Month"
-              aria-describedby="month-label"
-            >
+            <div class="input-group-prepend">
+              <label class="input-group-text" for="month-selection">Month</label>
+            </div>
+            <select name="month_number" class="custom-select" aria-label="Month" aria-describedby="month-label"
+              id="month-selection">
               <option selected value="">All months</option>
               <option id="month_number-1" value="1">January</option>
               <option id="month_number-2" value="2">February</option>
@@ -549,26 +539,22 @@
             </select>
           </div>
           <div class="input-group mb-3">
-            <span class="input-group-select" id="year-label">Year</span>
-            <select
-              name="four_digit_year"
-              class="form-select"
-              aria-label="Year"
-              aria-describedby="year-label"
-            >
+            <div class="input-group-prepend">
+              <label class="input-group-text" for="year-selection">Year</label>
+            </div>
+            <select name="four_digit_year" class="form-select" aria-label="Year" aria-describedby="year-label"
+              id="year-selection">
               <option selected value="">All years</option>
               <option id="four_digit_year-2022" selected value="2022">2022</option>
               <option id="four_digit_year-2021" value="2021">2021</option>
             </select>
           </div>
           <div class="input-group mb-3">
-            <span class="input-group-select" id="incident-limit-label">Incident limit</span>
-            <select
-              name="limit"
-              class="form-select"
-              aria-label="Incident limit"
-              aria-describedby="incident-limit-label"
-            >
+            <div class="input-group-prepend">
+              <label class="input-group-text" for="incident-limit-selection">Incident limit</label>
+            </div>
+            <select name="limit" class="form-select" aria-label="Incident limit" aria-describedby="incident-limit-label"
+              id="incident-limit-selection">
               <option id="limit-10" value="10">10</option>
               <option selected id="limit-20" value="20">20</option>
               <option id="limit-30" value="30">30</option>
