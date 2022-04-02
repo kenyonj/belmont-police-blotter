@@ -85,7 +85,7 @@ function retrievePlots() {
                       Date: ${year}/${month}/${day}<br>
                       Time: ${time}<br>
                       Location: ${location}<br>
-                      More information: <a href='/belmont-police-blotter/incidents/${year}/${month}/${day}/${number}'>${number}</a>`,
+                      More information: <a href='/incidents/${year}/${month}/${day}/${number}'>${number}</a>`,
         }
       })
     }).
