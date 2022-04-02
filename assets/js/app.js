@@ -41,7 +41,7 @@ function loadMap() {
 function retrievePlots() {
   const urlSearchParams = new URLSearchParams(window.location.search);
   const params = Object.fromEntries(urlSearchParams.entries());
-  const incidentsUrl = new URL("https://belmont-police-blotter-functions.vercel.app/api/index");
+  const incidentsUrl = new URL("https://bpb-api.heyo.pw/api/index");
   Object.keys(params).forEach(key => {
     if (params[key]) {
       incidentsUrl.searchParams.append(key, params[key])
