@@ -1,515 +1,24 @@
-<!-- This is a restricted API key and cannot be used on any other site other than this one. -->
-<script type="text/javascript"
-  src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAxsydycQ9ybjv0RSC3TNd_n_AS-m4dbU4"></script>
-<script type="text/javascript">
-  window.onload = function () {
-    LoadMap();
-  }
-  function LoadMap() {
-    return retrievePlots().then(markers => {
-      var mapOptions = {
-        center: new google.maps.LatLng(markers[0].lat, markers[0].lng),
-        zoom: 8,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-      };
-      var infoWindow = new google.maps.InfoWindow();
-      var latlngbounds = new google.maps.LatLngBounds();
-      var map = new google.maps.Map(document.getElementById("dvMap"), mapOptions);
-
-      updateIncidentCount(markers.length);
-
-      for (var thisMarker of markers) {
-        var data = thisMarker
-        var myLatlng = new google.maps.LatLng(data.lat, data.lng);
-        var marker = new google.maps.Marker({
-          position: myLatlng,
-          map: map,
-          title: data.title
-        });
-        (function (marker, data) {
-          google.maps.event.addListener(marker, "click", function (e) {
-            infoWindow.setContent("<div style = 'width:200px;min-height:40px'>" + data.description + "</div>");
-            infoWindow.open(map, marker);
-          });
-        })(marker, data);
-        latlngbounds.extend(marker.position);
-      }
-      var bounds = new google.maps.LatLngBounds();
-      map.setCenter(latlngbounds.getCenter());
-      map.fitBounds(latlngbounds);
-    });
-  }
-
-  function retrievePlots() {
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    const params = Object.fromEntries(urlSearchParams.entries());
-    const incidentsUrl = new URL("https://belmont-police-blotter-functions.vercel.app/api/index");
-    Object.keys(params).forEach(key => {
-      if (params[key]) {
-        incidentsUrl.searchParams.append(key, params[key])
-        const formSelection = document.getElementById(`${key}-${params[key]}`)
-
-        if (formSelection) {
-          formSelection.selected = true;
-        }
-      }
-    });
-
-    const streetElement = document.getElementById("street-name-input")
-
-    if (streetElement && params["distance_from"] != undefined) {
-      streetElement.value = params["distance_from"]
-    }
-
-    if (!params.hasOwnProperty("limit")) {
-      incidentsUrl.searchParams.append("limit", 20)
-    }
-
-    return fetch(incidentsUrl).
-      then(response => response.json()).
-      then(data => {
-        return data.items.map(({date, number, latitude, longitude, type, location, time}) => {
-          const realDate = new Date(date);
-          const year = realDate.getFullYear();
-          const month = (realDate.getMonth() + 1).toString().padStart(2, "0");
-          const day = realDate.getDate().toString().padStart(2, "0");
-
-          return {
-            "title": `Incident: ${number}`,
-            "lat": latitude,
-            "lng": longitude,
-            "description": `Type: ${type}<br>
-                        Date: ${year}/${month}/${day}<br>
-                        Time: ${time}<br>
-                        Location: ${location}<br>
-                        More information: <a href='/belmont-police-blotter/incidents/${year}/${month}/${day}/${number}'>${number}</a>`,
-          }
-        })
-      }).
-      catch((err) => {
-        console.log(`Error: ${err}`)
-      });
-  }
-
-  function updateIncidentCount(count) {
-    const countContainer = document.getElementById("incident-count");
-
-    if (countContainer) {
-      countContainer.innerText = count.toLocaleString();
-    }
-  }
-</script>
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-lg-8 mx-auto mbr-form" data-form-type="formoid">
       <form method="GET" class="mbr-form form-with-styler" data-form-title="Form Name">
         <div class="row">
           <div class="col-lg-12 col-md-12 col-sm-12">
-            <h1 class="mbr-section-title mb-4 align-center mbr-fonts-style display-2"><strong>Belmont Police
-                Blotter</strong></h1>
-          </div>
-          <div class="col-lg-12 col-md-12 col-sm-12">
-            <p class="mbr-text mbr-fonts-style mb-5 align-center display-7">Search below to get started</p>
+            <img src="assets/images/belmont-blotter.png" class="img-fluid mb-3" alt="Belmont Police Blotter">
           </div>
         </div>
         <div class="row">
-          <div class="input-group mb-3">
+          <div class="input-group mb-3 col">
             <span class="input-group-text" id="street-name-label">Street and optional number</span>
             <input list="streets" name="distance_from" class="form-control" aria-label="Stree name and optional number"
               aria-describedby="street-name-label">
-            <datalist id="streets">
-              <option value="A ST">A ST</option>
-              <option value="ACORN PARK DR">ACORN PARK DR</option>
-              <option value="ACORN ST">ACORN ST</option>
-              <option value="ADAMS ST">ADAMS ST</option>
-              <option value="AGASSIZ AVE">AGASSIZ AVE</option>
-              <option value="AGASSIZ ST">AGASSIZ ST</option>
-              <option value="ALBERT AVE">ALBERT AVE</option>
-              <option value="ALEXANDER AVE">ALEXANDER AVE</option>
-              <option value="ALMA AVE">ALMA AVE</option>
-              <option value="AMELIA ST">AMELIA ST</option>
-              <option value="AMHERST RD">AMHERST RD</option>
-              <option value="ANIS RD">ANIS RD</option>
-              <option value="ARTHUR RD">ARTHUR RD</option>
-              <option value="ASH ST">ASH ST</option>
-              <option value="AUDREY RD">AUDREY RD</option>
-              <option value="AUDUBON LN">AUDUBON LN</option>
-              <option value="B ST">B ST</option>
-              <option value="BACON RD">BACON RD</option>
-              <option value="BAKER ST">BAKER ST</option>
-              <option value="BANKS ST">BANKS ST</option>
-              <option value="BARBARA RD">BARBARA RD</option>
-              <option value="BARNARD RD">BARNARD RD</option>
-              <option value="BARTLETT AVE">BARTLETT AVE</option>
-              <option value="BAY STATE RD">BAY STATE RD</option>
-              <option value="BAYBERRY LN">BAYBERRY LN</option>
-              <option value="BEATRICE CIR">BEATRICE CIR</option>
-              <option value="BECKET RD">BECKET RD</option>
-              <option value="BEECH ST">BEECH ST</option>
-              <option value="BELLEVUE RD">BELLEVUE RD</option>
-              <option value="BELLINGTON ST">BELLINGTON ST</option>
-              <option value="BELMONT CIR">BELMONT CIR</option>
-              <option value="BELMONT ST">BELMONT ST</option>
-              <option value="BENJAMIN RD">BENJAMIN RD</option>
-              <option value="BENTON RD">BENTON RD</option>
-              <option value="BERWICK ST">BERWICK ST</option>
-              <option value="BETTS RD">BETTS RD</option>
-              <option value="BIRCH HILL RD">BIRCH HILL RD</option>
-              <option value="BIRCH ST">BIRCH ST</option>
-              <option value="BLAKE ST">BLAKE ST</option>
-              <option value="BLANCHARD RD">BLANCHARD RD</option>
-              <option value="BOW RD">BOW RD</option>
-              <option value="BRADFORD RD">BRADFORD RD</option>
-              <option value="BRADLEY RD">BRADLEY RD</option>
-              <option value="BRANCHAUD RD">BRANCHAUD RD</option>
-              <option value="BRETTWOOD RD">BRETTWOOD RD</option>
-              <option value="BRIGHT RD">BRIGHT RD</option>
-              <option value="BRIGHTON ST">BRIGHTON ST</option>
-              <option value="BROAD ST">BROAD ST</option>
-              <option value="BROOKSIDE AVE">BROOKSIDE AVE</option>
-              <option value="BURNHAM ST">BURNHAM ST</option>
-              <option value="C ST">C ST</option>
-              <option value="CAMBRIDGE ST">CAMBRIDGE ST</option>
-              <option value="CANDLEBERRY LN">CANDLEBERRY LN</option>
-              <option value="CARLETON CIR">CARLETON CIR</option>
-              <option value="CARLETON RD">CARLETON RD</option>
-              <option value="CEDAR RD">CEDAR RD</option>
-              <option value="CENTRE AVE">CENTRE AVE</option>
-              <option value="CHANDLER ST">CHANDLER ST</option>
-              <option value="CHANNING RD">CHANNING RD</option>
-              <option value="CHARLES ST">CHARLES ST</option>
-              <option value="CHENERY TERR">CHENERY TERR</option>
-              <option value="CHERRY ST">CHERRY ST</option>
-              <option value="CHESTER RD">CHESTER RD</option>
-              <option value="CHESTNUT ST">CHESTNUT ST</option>
-              <option value="CHILTON ST">CHILTON ST</option>
-              <option value="CHOATE RD">CHOATE RD</option>
-              <option value="CHURCH ST">CHURCH ST</option>
-              <option value="CLAFLIN ST">CLAFLIN ST</option>
-              <option value="CLAIREMONT RD">CLAIREMONT RD</option>
-              <option value="CLARENDON RD">CLARENDON RD</option>
-              <option value="CLARK LANE">CLARK LANE</option>
-              <option value="CLARK ST">CLARK ST</option>
-              <option value="CLIFTON ST">CLIFTON ST</option>
-              <option value="CLOVER ST">CLOVER ST</option>
-              <option value="CLYDE ST">CLYDE ST</option>
-              <option value="COLBY ST">COLBY ST</option>
-              <option value="COLONIAL TERR">COLONIAL TERR</option>
-              <option value="COMMON ST">COMMON ST</option>
-              <option value="CONCORD AVE">CONCORD AVE</option>
-              <option value="CONCORD TPK">CONCORD TPK</option>
-              <option value="COOLIDGE RD">COOLIDGE RD</option>
-              <option value="COTTAGE ST">COTTAGE ST</option>
-              <option value="COUNTRY CLUB LN">COUNTRY CLUB LN</option>
-              <option value="COWDIN ST">COWDIN ST</option>
-              <option value="CREELEY RD">CREELEY RD</option>
-              <option value="CRESCENT RD">CRESCENT RD</option>
-              <option value="CRESTVIEW RD">CRESTVIEW RD</option>
-              <option value="CROSS ST">CROSS ST</option>
-              <option value="CUMBERLAND RD">CUMBERLAND RD</option>
-              <option value="CUSHING AVE">CUSHING AVE</option>
-              <option value="CUTTER ST">CUTTER ST</option>
-              <option value="DALTON RD">DALTON RD</option>
-              <option value="DANA RD">DANA RD</option>
-              <option value="DANTE AVE">DANTE AVE</option>
-              <option value="DARTMOUTH ST">DARTMOUTH ST</option>
-              <option value="DAVIS RD">DAVIS RD</option>
-              <option value="DAVIS ST">DAVIS ST</option>
-              <option value="DAY SCHOOL LN">DAY SCHOOL LN</option>
-              <option value="DEAN ST">DEAN ST</option>
-              <option value="DORSET RD">DORSET RD</option>
-              <option value="DOUGLAS RD">DOUGLAS RD</option>
-              <option value="DREW RD">DREW RD</option>
-              <option value="DUNBARTON RD">DUNBARTON RD</option>
-              <option value="DUNDONALD RD">DUNDONALD RD</option>
-              <option value="EDGEMOOR RD">EDGEMOOR RD</option>
-              <option value="EDMUNDS WAY">EDMUNDS WAY</option>
-              <option value="EDWARD ST">EDWARD ST</option>
-              <option value="ELIOT RD">ELIOT RD</option>
-              <option value="ELIZABETH RD">ELIZABETH RD</option>
-              <option value="ELM ST">ELM ST</option>
-              <option value="EMERSON ST">EMERSON ST</option>
-              <option value="ERICSSON ST">ERICSSON ST</option>
-              <option value="ERNEST RD">ERNEST RD</option>
-              <option value="ESSEX RD">ESSEX RD</option>
-              <option value="EVERGREEN WAY">EVERGREEN WAY</option>
-              <option value="EXETER ST">EXETER ST</option>
-              <option value="FAIRMONT ST">FAIRMONT ST</option>
-              <option value="FAIRVIEW AVE">FAIRVIEW AVE</option>
-              <option value="FALMOUTH ST">FALMOUTH ST</option>
-              <option value="FARM RD">FARM RD</option>
-              <option value="FARNHAM ST">FARNHAM ST</option>
-              <option value="FIELDMONT RD">FIELDMONT RD</option>
-              <option value="FITZMAURICE CIR">FITZMAURICE CIR</option>
-              <option value="FLANDERS RD">FLANDERS RD</option>
-              <option value="FLETCHER RD">FLETCHER RD</option>
-              <option value="FLETT RD">FLETT RD</option>
-              <option value="FOSTER RD">FOSTER RD</option>
-              <option value="FRANCIS ST">FRANCIS ST</option>
-              <option value="FRANKLIN ST">FRANKLIN ST</option>
-              <option value="FREDERICK ST">FREDERICK ST</option>
-              <option value="FROST RD">FROST RD</option>
-              <option value="GALE RD">GALE RD</option>
-              <option value="GARDEN ST">GARDEN ST</option>
-              <option value="GARFIELD RD">GARFIELD RD</option>
-              <option value="GARRISON RD">GARRISON RD</option>
-              <option value="GEORGE ST">GEORGE ST</option>
-              <option value="GILBERT RD">GILBERT RD</option>
-              <option value="GILMORE RD">GILMORE RD</option>
-              <option value="GLENDALE RD">GLENDALE RD</option>
-              <option value="GLENN RD">GLENN RD</option>
-              <option value="GODEN ST">GODEN ST</option>
-              <option value="GORDON TERR">GORDON TERR</option>
-              <option value="GORHAM RD">GORHAM RD</option>
-              <option value="GRANT AVE">GRANT AVE</option>
-              <option value="GREENSBROOK WAY">GREENSBROOK WAY</option>
-              <option value="GREYBIRCH CIR">GREYBIRCH CIR</option>
-              <option value="GREYBIRCH PARK">GREYBIRCH PARK</option>
-              <option value="GROSVENOR RD">GROSVENOR RD</option>
-              <option value="GROVE ST">GROVE ST</option>
-              <option value="HAMILTON RD">HAMILTON RD</option>
-              <option value="HAMMOND RD">HAMMOND RD</option>
-              <option value="HARDING AVE">HARDING AVE</option>
-              <option value="HARRIET AVE">HARRIET AVE</option>
-              <option value="HARRIS ST">HARRIS ST</option>
-              <option value="HARTLEY RD">HARTLEY RD</option>
-              <option value="HARVARD RD">HARVARD RD</option>
-              <option value="HASTINGS RD">HASTINGS RD</option>
-              <option value="HAWTHORNE ST">HAWTHORNE ST</option>
-              <option value="HAY RD">HAY RD</option>
-              <option value="HENRY ST">HENRY ST</option>
-              <option value="HERBERT RD">HERBERT RD</option>
-              <option value="HERMON ST">HERMON ST</option>
-              <option value="HICKORY LN">HICKORY LN</option>
-              <option value="HIGHLAND RD">HIGHLAND RD</option>
-              <option value="HILL RD">HILL RD</option>
-              <option value="HILLCREST RD">HILLCREST RD</option>
-              <option value="HILLSIDE TERR">HILLSIDE TERR</option>
-              <option value="HINCKLEY WAY">HINCKLEY WAY</option>
-              <option value="HITTINGER ST">HITTINGER ST</option>
-              <option value="HOITT RD">HOITT RD</option>
-              <option value="HOLDEN RD">HOLDEN RD</option>
-              <option value="HOLT ST">HOLT ST</option>
-              <option value="HOMER RD">HOMER RD</option>
-              <option value="HORACE RD">HORACE RD</option>
-              <option value="HORNE RD">HORNE RD</option>
-              <option value="HOUGH RD">HOUGH RD</option>
-              <option value="HOUGHTON RD">HOUGHTON RD</option>
-              <option value="HOWARD ST">HOWARD ST</option>
-              <option value="HOWELLS RD">HOWELLS RD</option>
-              <option value="HULL ST">HULL ST</option>
-              <option value="HURD RD">HURD RD</option>
-              <option value="HURLEY ST">HURLEY ST</option>
-              <option value="INDIAN HILL RD">INDIAN HILL RD</option>
-              <option value="IRVING ST">IRVING ST</option>
-              <option value="IVY RD">IVY RD</option>
-              <option value="JACKSON RD">JACKSON RD</option>
-              <option value="JACOB RD">JACOB RD</option>
-              <option value="JASON RD">JASON RD</option>
-              <option value="JEANETTE AVE">JEANETTE AVE</option>
-              <option value="JONATHAN ST">JONATHAN ST</option>
-              <option value="JUNIPER RD">JUNIPER RD</option>
-              <option value="KENMORE RD">KENMORE RD</option>
-              <option value="KENT ST">KENT ST</option>
-              <option value="KILBURN RD">KILBURN RD</option>
-              <option value="KING ST">KING ST</option>
-              <option value="KNOWLES RD">KNOWLES RD</option>
-              <option value="KNOX ST">KNOX ST</option>
-              <option value="LAKE ST">LAKE ST</option>
-              <option value="LAMBERT RD">LAMBERT RD</option>
-              <option value="LAMOINE ST">LAMOINE ST</option>
-              <option value="LANTERN RD">LANTERN RD</option>
-              <option value="LARCH CIR">LARCH CIR</option>
-              <option value="LAUREL ST">LAUREL ST</option>
-              <option value="LAWNDALE ST">LAWNDALE ST</option>
-              <option value="LAWRENCE LN">LAWRENCE LN</option>
-              <option value="LEDGEWOOD PL">LEDGEWOOD PL</option>
-              <option value="LEICESTER RD">LEICESTER RD</option>
-              <option value="LEONARD ST">LEONARD ST</option>
-              <option value="LESLIE RD">LESLIE RD</option>
-              <option value="LEWIS RD">LEWIS RD</option>
-              <option value="LEXINGTON ST">LEXINGTON ST</option>
-              <option value="LEXINGTON ST  STE 101">LEXINGTON ST STE 101</option>
-              <option value="LEXINGTON ST  STE 201">LEXINGTON ST STE 201</option>
-              <option value="LINCOLN CIR">LINCOLN CIR</option>
-              <option value="LINCOLN ST">LINCOLN ST</option>
-              <option value="LINDEN AVE">LINDEN AVE</option>
-              <option value="LITTLE POND RD">LITTLE POND RD</option>
-              <option value="LIVERMORE RD">LIVERMORE RD</option>
-              <option value="LOCUST ST">LOCUST ST</option>
-              <option value="LODGE RD">LODGE RD</option>
-              <option value="LONG AVE">LONG AVE</option>
-              <option value="LONGMEADOW RD">LONGMEADOW RD</option>
-              <option value="LORIMER RD">LORIMER RD</option>
-              <option value="LORING ST">LORING ST</option>
-              <option value="LOUISE RD">LOUISE RD</option>
-              <option value="MADISON ST">MADISON ST</option>
-              <option value="MANNIX CIR">MANNIX CIR</option>
-              <option value="MAPLE ST">MAPLE ST</option>
-              <option value="MAPLE TERR">MAPLE TERR</option>
-              <option value="MARION RD">MARION RD</option>
-              <option value="MARLBORO ST">MARLBORO ST</option>
-              <option value="MARSH ST">MARSH ST</option>
-              <option value="MAYFIELD RD">MAYFIELD RD</option>
-              <option value="MEADOWS LN">MEADOWS LN</option>
-              <option value="MERRILL AVE">MERRILL AVE</option>
-              <option value="MIDDLECOT ST">MIDDLECOT ST</option>
-              <option value="MIDLAND ST">MIDLAND ST</option>
-              <option value="MILL ST">MILL ST</option>
-              <option value="MILTON ST">MILTON ST</option>
-              <option value="MOORE ST">MOORE ST</option>
-              <option value="MORAINE ST">MORAINE ST</option>
-              <option value="MUNROE ST">MUNROE ST</option>
-              <option value="MYRTLE ST">MYRTLE ST</option>
-              <option value="NEWCASTLE RD">NEWCASTLE RD</option>
-              <option value="NEWTON ST">NEWTON ST</option>
-              <option value="OAK AVE">OAK AVE</option>
-              <option value="OAK ST">OAK ST</option>
-              <option value="OAKLEY RD">OAKLEY RD</option>
-              <option value="OAKMONT LN">OAKMONT LN</option>
-              <option value="OLD CONCORD RD">OLD CONCORD RD</option>
-              <option value="OLD MIDDLESEX RD">OLD MIDDLESEX RD</option>
-              <option value="OLIVER RD">OLIVER RD</option>
-              <option value="OLMSTED DR">OLMSTED DR</option>
-              <option value="ORCHARD CIR">ORCHARD CIR</option>
-              <option value="ORCHARD ST">ORCHARD ST</option>
-              <option value="OXFORD AVE">OXFORD AVE</option>
-              <option value="OXFORD CIR">OXFORD CIR</option>
-              <option value="PALFREY RD">PALFREY RD</option>
-              <option value="PARK AVE">PARK AVE</option>
-              <option value="PARK RD">PARK RD</option>
-              <option value="PARTRIDGE LN">PARTRIDGE LN</option>
-              <option value="PAYSON RD">PAYSON RD</option>
-              <option value="PAYSON TERR">PAYSON TERR</option>
-              <option value="PEARL ST">PEARL ST</option>
-              <option value="PEARSON RD">PEARSON RD</option>
-              <option value="PEQUOSSETTE RD">PEQUOSSETTE RD</option>
-              <option value="PHILIP RD">PHILIP RD</option>
-              <option value="PIERCE RD">PIERCE RD</option>
-              <option value="PILGRIM RD">PILGRIM RD</option>
-              <option value="PINE ST">PINE ST</option>
-              <option value="PINEHURST RD">PINEHURST RD</option>
-              <option value="PLEASANT ST">PLEASANT ST</option>
-              <option value="PLYMOUTH AVE">PLYMOUTH AVE</option>
-              <option value="POND ST">POND ST</option>
-              <option value="POPLAR ST">POPLAR ST</option>
-              <option value="PREBLE GARDENS RD">PREBLE GARDENS RD</option>
-              <option value="PRENTISS LN">PRENTISS LN</option>
-              <option value="PRINCE ST">PRINCE ST</option>
-              <option value="PROSPECT ST">PROSPECT ST</option>
-              <option value="RADCLIFFE RD">RADCLIFFE RD</option>
-              <option value="RALEIGH RD">RALEIGH RD</option>
-              <option value="RANDOLPH ST">RANDOLPH ST</option>
-              <option value="RAYBURN RD">RAYBURN RD</option>
-              <option value="REGENT RD">REGENT RD</option>
-              <option value="RICHARDSON RD">RICHARDSON RD</option>
-              <option value="RICHMOND RD">RICHMOND RD</option>
-              <option value="RIDGE RD">RIDGE RD</option>
-              <option value="RIPLEY RD">RIPLEY RD</option>
-              <option value="ROBIN WOOD RD">ROBIN WOOD RD</option>
-              <option value="ROCKMONT RD">ROCKMONT RD</option>
-              <option value="ROSS RD">ROSS RD</option>
-              <option value="ROYAL RD">ROYAL RD</option>
-              <option value="RUSSELL TERR">RUSSELL TERR</option>
-              <option value="RUTLEDGE RD">RUTLEDGE RD</option>
-              <option value="S COTTAGE RD">S COTTAGE RD</option>
-              <option value="S COTTAGE RD U101">S COTTAGE RD U101</option>
-              <option value="S COTTAGE RD U102">S COTTAGE RD U102</option>
-              <option value="S COTTAGE RD U201">S COTTAGE RD U201</option>
-              <option value="S COTTAGE RD U202">S COTTAGE RD U202</option>
-              <option value="S COTTAGE RD U203">S COTTAGE RD U203</option>
-              <option value="SABINA WAY">SABINA WAY</option>
-              <option value="SANDRICK RD">SANDRICK RD</option>
-              <option value="SARGENT RD">SARGENT RD</option>
-              <option value="SCHOOL ST">SCHOOL ST</option>
-              <option value="SCOTT RD">SCOTT RD</option>
-              <option value="SELWYN RD">SELWYN RD</option>
-              <option value="SHADY BROOK LN">SHADY BROOK LN</option>
-              <option value="SHARPE RD">SHARPE RD</option>
-              <option value="SHAW RD">SHAW RD</option>
-              <option value="SHEAN RD">SHEAN RD</option>
-              <option value="SHERMAN ST">SHERMAN ST</option>
-              <option value="SIMMONS AVE">SIMMONS AVE</option>
-              <option value="SKAHAN RD">SKAHAN RD</option>
-              <option value="SLADE ST">SLADE ST</option>
-              <option value="SNAKE HILL RD">SNAKE HILL RD</option>
-              <option value="SOMERSET ST">SOMERSET ST</option>
-              <option value="SPINNEY TERR">SPINNEY TERR</option>
-              <option value="SPRING VALLEY RD">SPRING VALLEY RD</option>
-              <option value="SPRINGFIELD ST">SPRINGFIELD ST</option>
-              <option value="SPRUCE ST">SPRUCE ST</option>
-              <option value="ST JAMES COURT">ST JAMES COURT</option>
-              <option value="STABLES WAY">STABLES WAY</option>
-              <option value="STANLEY RD">STANLEY RD</option>
-              <option value="STATLER RD">STATLER RD</option>
-              <option value="STAUNTON RD">STAUNTON RD</option>
-              <option value="STEARNS RD">STEARNS RD</option>
-              <option value="STELLA RD">STELLA RD</option>
-              <option value="STEWART TERR">STEWART TERR</option>
-              <option value="STONE RD">STONE RD</option>
-              <option value="STONY BROOK RD">STONY BROOK RD</option>
-              <option value="STULTS RD">STULTS RD</option>
-              <option value="SUMMIT RD">SUMMIT RD</option>
-              <option value="SUMNER LN">SUMNER LN</option>
-              <option value="SUNNYSIDE PL">SUNNYSIDE PL</option>
-              <option value="SYCAMORE ST">SYCAMORE ST</option>
-              <option value="TAYLOR RD">TAYLOR RD</option>
-              <option value="TEMPLE ST">TEMPLE ST</option>
-              <option value="THAYER RD">THAYER RD</option>
-              <option value="THAYER ST">THAYER ST</option>
-              <option value="THINGVALLA AVE">THINGVALLA AVE</option>
-              <option value="THOMAS ST">THOMAS ST</option>
-              <option value="TOBEY RD">TOBEY RD</option>
-              <option value="TOWNSEND RD">TOWNSEND RD</option>
-              <option value="TRAPELO RD">TRAPELO RD</option>
-              <option value="TRAPELO RD UNIT 21">TRAPELO RD UNIT 21</option>
-              <option value="TROWBRIDGE ST">TROWBRIDGE ST</option>
-              <option value="TROY RD">TROY RD</option>
-              <option value="TYLER RD">TYLER RD</option>
-              <option value="UNDERWOOD ST">UNDERWOOD ST</option>
-              <option value="UNITY AVE">UNITY AVE</option>
-              <option value="UPLAND RD">UPLAND RD</option>
-              <option value="VALE RD">VALE RD</option>
-              <option value="VAN NESS RD">VAN NESS RD</option>
-              <option value="VERNON RD">VERNON RD</option>
-              <option value="VILLAGE HILL RD">VILLAGE HILL RD</option>
-              <option value="VINCENT AVE">VINCENT AVE</option>
-              <option value="WALNUT ST">WALNUT ST</option>
-              <option value="WARWICK RD">WARWICK RD</option>
-              <option value="WASHINGTON ST">WASHINGTON ST</option>
-              <option value="WATERHOUSE RD">WATERHOUSE RD</option>
-              <option value="WATSON RD">WATSON RD</option>
-              <option value="WAVERLEY ST">WAVERLEY ST</option>
-              <option value="WAVERLEY TERR">WAVERLEY TERR</option>
-              <option value="WEBER RD">WEBER RD</option>
-              <option value="WELLESLEY RD">WELLESLEY RD</option>
-              <option value="WELLINGTON LN">WELLINGTON LN</option>
-              <option value="WEST ST">WEST ST</option>
-              <option value="WESTLUND RD">WESTLUND RD</option>
-              <option value="WHITCOMB ST">WHITCOMB ST</option>
-              <option value="WHITE ST">WHITE ST</option>
-              <option value="WHITE TERR">WHITE TERR</option>
-              <option value="WILEY RD">WILEY RD</option>
-              <option value="WILLISTON RD">WILLISTON RD</option>
-              <option value="WILLOW ST">WILLOW ST</option>
-              <option value="WILSON AVE">WILSON AVE</option>
-              <option value="WINN ST">WINN ST</option>
-              <option value="WINSLOW RD">WINSLOW RD</option>
-              <option value="WINTER ST">WINTER ST</option>
-              <option value="WINTHROP RD">WINTHROP RD</option>
-              <option value="WOODBINE RD">WOODBINE RD</option>
-              <option value="WOODFALL RD">WOODFALL RD</option>
-              <option value="WOODLAND ST">WOODLAND ST</option>
-              <option value="WOODS RD">WOODS RD</option>
-              <option value="WORCESTER ST">WORCESTER ST</option>
-              <option value="YORK RD">YORK RD</option>
-            </datalist>
+            <datalist id="streets"></datalist>
           </div>
-          <div class="input-group mb-3">
+          <div class="input-group mb-3 col">
             <div class="input-group-prepend">
               <label class="input-group-text" for="search-radius-selection">Search radius</label>
             </div>
-            <select name="distance_limit" class="custom-select" id="search-radius-selection">
+            <select name="distance_limit" class="form-select" id="search-radius-selection">
               <option selected id="distance_limit-all" value="">All of Belmont</option>
               <option id="distance_limit-0.1" value="0.1">0.10 miles</option>
               <option id="distance_limit-0.25" value="0.25">0.25 miles</option>
@@ -517,11 +26,13 @@
               <option id="distance_limit-1" value="1">1 mile</option>
             </select>
           </div>
-          <div class="input-group mb-3">
+        </div>
+        <div class="row">
+          <div class="input-group mb-3 col">
             <div class="input-group-prepend">
               <label class="input-group-text" for="month-selection">Month</label>
             </div>
-            <select name="month_number" class="custom-select" aria-label="Month" aria-describedby="month-label"
+            <select name="month_number" class="form-select" aria-label="Month" aria-describedby="month-label"
               id="month-selection">
               <option selected value="">All months</option>
               <option id="month_number-1" value="1">January</option>
@@ -538,23 +49,23 @@
               <option id="month_number-12" value="12">December</option>
             </select>
           </div>
-          <div class="input-group mb-3">
+          <div class="input-group mb-3 col">
             <div class="input-group-prepend">
               <label class="input-group-text" for="year-selection">Year</label>
             </div>
-            <select name="four_digit_year" class="custom-select" aria-label="Year" aria-describedby="year-label"
+            <select name="four_digit_year" class="form-select" aria-label="Year" aria-describedby="year-label"
               id="year-selection">
               <option selected value="">All years</option>
               <option id="four_digit_year-2022" selected value="2022">2022</option>
               <option id="four_digit_year-2021" value="2021">2021</option>
             </select>
           </div>
-          <div class="input-group mb-3">
+          <div class="input-group mb-3 col">
             <div class="input-group-prepend">
               <label class="input-group-text" for="incident-limit-selection">Incident limit</label>
             </div>
-            <select name="limit" class="custom-select" aria-label="Incident limit"
-              aria-describedby="incident-limit-label" id="incident-limit-selection">
+            <select name="limit" class="form-select" aria-label="Incident limit" aria-describedby="incident-limit-label"
+              id="incident-limit-selection">
               <option id="limit-10" value="10">10</option>
               <option selected id="limit-20" value="20">20</option>
               <option id="limit-30" value="30">30</option>
@@ -572,15 +83,21 @@
               <option id="limit-1000" value="1000">1,000</option>
             </select>
           </div>
-          <div class="mbr-section-btn col-md-auto col">
-            <button type="submit" class="btn btn-warning display-4">Search!</button>
+        </div>
+        <div class="row justify-content-md-center">
+          <div class="d-grid gap-2 col-6 mx-auto">
+            <button class="btn btn-warning" type="submit">Search!</button>
           </div>
+        </div>
+        <div class="row justify-content-center">
+          <h3><span id="incident-count"></span> Incidents:</h3>
+          <div id="dvMap" style="height: 500px"></div>
         </div>
       </form>
     </div>
   </div>
-  <div class="row justify-content-center">
-    <h3><span id="incident-count"></span> Incidents:</h3>
-    <div id="dvMap" style="height: 500px"></div>
-  </div>
 </div>
+<script type="text/javascript" src="assets/js/app.js"></script>
+<!-- This is a restricted API key and cannot be used on any other site other than this one. -->
+<script type="text/javascript"
+  src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAxsydycQ9ybjv0RSC3TNd_n_AS-m4dbU4"></script>
