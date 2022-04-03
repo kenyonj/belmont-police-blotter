@@ -209,18 +209,20 @@ function setupPaginationButtons() {
     const urlSearchParams = new URLSearchParams(window.location.search);
     const params = Object.fromEntries(urlSearchParams.entries());
 
-    if (params["offset"] || 0 == 0) {
+    if ((params["offset"] || 0) == 0) {
       prevPageContainer.classList.add("disabled");
       prevPageLink.ariaDisabled = true;
       urlSearchParams.set("offset", params["limit"] || 20);
+      urlSearchParams.set("view", "list");
       const nextNewRelativePathQuery = window.location.pathname + '?' + urlSearchParams.toString();
       nextPageLink.setAttribute("href", nextNewRelativePathQuery);
     } else {
       prevPageContainer.classList.remove("disabled");
       prevPageLink.ariaDisabled = false;
-      const prevOffset = Number(params["offset"]) - Number(params["limit"] || 20);
-      const nextOffset = Number(params["offset"]) + Number(params["limit"] || 20);
+      const prevOffset = Number(params["offset"]) - Number(params["limit"] || params["offset"] || 20);
+      const nextOffset = Number(params["offset"]) + Number(params["limit"] || params["offset"] || 20);
       urlSearchParams.set("offset", prevOffset);
+      urlSearchParams.set("view", "list");
       const prevNewRelativePathQuery = window.location.pathname + '?' + urlSearchParams.toString();
       urlSearchParams.set("offset", nextOffset);
       const nextNewRelativePathQuery = window.location.pathname + '?' + urlSearchParams.toString();
