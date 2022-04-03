@@ -1,10 +1,13 @@
 window.onload = function () {
-  loadMap();
+  loadData();
   updateStreetsDataList();
+  conditionallyShowMapOrList();
+  setupPaginationButtons();
 }
 
-function loadMap() {
+function loadData() {
   return retrievePlots().then(markers => {
+    createTable(markers);
     var mapOptions = {
       center: new google.maps.LatLng(markers[0].lat, markers[0].lng),
       zoom: 8,
@@ -35,6 +38,9 @@ function loadMap() {
     var bounds = new google.maps.LatLngBounds();
     map.setCenter(latlngbounds.getCenter());
     map.fitBounds(latlngbounds);
+  }).
+  catch((err) => {
+    console.log(`loadData -> retrievePlots -> Error: ${err}`)
   });
 }
 
@@ -44,7 +50,10 @@ function retrievePlots() {
   const incidentsUrl = new URL("https://bpb-api.heyo.pw/api/index");
   Object.keys(params).forEach(key => {
     if (params[key]) {
-      incidentsUrl.searchParams.append(key, params[key])
+      if (key !== "view") {
+        incidentsUrl.searchParams.append(key, params[key])
+      }
+
       const formSelection = document.getElementById(`${key}-${params[key]}`)
 
       if (formSelection) {
@@ -78,6 +87,11 @@ function retrievePlots() {
         const day = realDate.getDate().toString().padStart(2, "0");
 
         return {
+          year, month, day,
+          number,
+          type,
+          location,
+          time,
           "title": `Incident: ${number}`,
           "lat": latitude,
           "lng": longitude,
@@ -90,8 +104,44 @@ function retrievePlots() {
       })
     }).
     catch((err) => {
-      console.log(`Error: ${err}`)
+      console.log(`retrievePlots -> fetch -> Error: ${err}`)
     });
+}
+
+function createTable(markers) {
+  const table = document.getElementById("incident-list");
+
+  if (table) {
+    markers.forEach(marker => table.appendChild(createTableRow(marker)));
+  }
+}
+
+function createTableRow(marker) {
+  const row = document.createElement("tr");
+  const id = document.createElement("td");
+  const type = document.createElement("td");
+  const date = document.createElement("td");
+  const time = document.createElement("td");
+  const streetLocation = document.createElement("td");
+
+  row.setAttribute(
+    "onclick",
+    `window.location="/incidents/${marker.year}/${marker.month}/${marker.day}/${marker.number}";`
+  );
+  row.setAttribute("style", "cursor: pointer;");
+  id.innerText = marker.number;
+  type.innerText = marker.type;
+  date.innerText = `${marker.year}/${marker.month}/${marker.day}`;
+  time.innerText = marker.time;
+  streetLocation.innerText = marker.location;
+
+  row.appendChild(id);
+  row.appendChild(type);
+  row.appendChild(date);
+  row.appendChild(time);
+  row.appendChild(streetLocation);
+
+  return row;
 }
 
 function updateIncidentCount(count) {
@@ -117,6 +167,67 @@ function createStreetOption(street) {
   option.value = street;
   option.innerText = street;
   return option;
+}
+
+function conditionallyShowMapOrList() {
+  const listButton = document.getElementById("nav-list-tab");
+  const mapButton = document.getElementById("nav-map-tab");
+  const hiddenInput = document.getElementById("view-input");
+
+  if (hiddenInput) {
+    hiddenInput.value = "list";
+  } else {
+    hiddenInput.value = "map";
+  }
+
+  if (listButton && viewIsList()) {
+    listButton.click();
+  } else if (mapButton) {
+    mapButton.click();
+  }
+}
+
+function setHiddenMapOrListInput(tabName) {
+  const hiddenInput = document.getElementById("view-input");
+
+  if (hiddenInput) {
+    hiddenInput.value = tabName;
+  }
+}
+
+function viewIsList() {
+  return window.location.search.includes("view=list");
+}
+
+function setupPaginationButtons() {
+  const prevPageContainer = document.getElementById("prev-page-container");
+  const nextPageContainer = document.getElementById("next-page-container");
+  const prevPageLink = document.getElementById("prev-page-link");
+  const nextPageLink = document.getElementById("next-page-link");
+
+  if (prevPageContainer && nextPageContainer && prevPageLink && nextPageLink) {
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const params = Object.fromEntries(urlSearchParams.entries());
+
+    if (params["offset"] && params["offset"] > 0) {
+      prevPageContainer.classList.remove("disabled");
+      prevPageLink.ariaDisabled = false;
+      const prevOffset = Number(params["offset"]) - Number(params["limit"]);
+      const nextOffset = Number(params["offset"]) + Number(params["limit"]);
+      urlSearchParams.set("offset", prevOffset);
+      const prevNewRelativePathQuery = window.location.pathname + '?' + urlSearchParams.toString();
+      urlSearchParams.set("offset", nextOffset);
+      const nextNewRelativePathQuery = window.location.pathname + '?' + urlSearchParams.toString();
+      prevPageLink.setAttribute("href", prevNewRelativePathQuery);
+      nextPageLink.setAttribute("href", nextNewRelativePathQuery);
+    } else {
+      prevPageContainer.classList.add("disabled");
+      prevPageLink.ariaDisabled = true;
+      urlSearchParams.set("offset", params["limit"]);
+      const nextNewRelativePathQuery = window.location.pathname + '?' + urlSearchParams.toString();
+      nextPageLink.setAttribute("href", nextNewRelativePathQuery);
+    }
+  }
 }
 
 function getStreets() {

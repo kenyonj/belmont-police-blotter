@@ -2,6 +2,8 @@
   <div class="row justify-content-center">
     <div class="col-lg-8 mx-auto mbr-form" data-form-type="formoid">
       <form method="GET" class="mbr-form form-with-styler" data-form-title="Form Name">
+        <input name="view" type="hidden" id="view-input" value="map">
+
         <div class="row">
           <div class="col-lg-12 col-md-12 col-sm-12">
             <img src="assets/images/belmont-blotter.png" class="img-fluid mb-3" alt="Belmont Police Blotter">
@@ -82,8 +84,8 @@
                       </select>
                     </div>
                     <div class="input-group mb-3 col">
-                      <div class="input-group-prepend">
-                        <label class="input-group-text" for="year-selection">Year</label>
+                      <div class="input-group-prepend"> <label class="input-group-text"
+                          for="year-selection">Year</label>
                       </div>
                       <select name="four_digit_year" class="form-select" aria-label="Year" aria-describedby="year-label"
                         id="year-selection">
@@ -160,8 +162,47 @@
           </div>
         </div>
         <div class="row justify-content-center">
-          <h3><span id="incident-count"></span> Incidents:</h3>
-          <div id="dvMap" style="height: 500px"></div>
+          <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+              <button onclick="setHiddenMapOrListInput('map');" class="nav-link active" id="nav-map-tab"
+                data-bs-toggle="tab" data-bs-target="#nav-map" type="button" role="tab" aria-controls="nav-map"
+                aria-selected="true">Map</button>
+              <button onclick="setHiddenMapOrListInput('list');" class="nav-link" id="nav-list-tab" data-bs-toggle="tab"
+                data-bs-target="#nav-list" type="button" role="tab" aria-controls="nav-list"
+                aria-selected="false">List</button>
+            </div>
+          </nav>
+          <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-map" role="tabpanel" aria-labelledby="nav-map-tab">
+              <h3><span id="incident-count"></span> Incidents:</h3>
+              <div id="dvMap" style="height: 500px"></div>
+            </div>
+            <div class="tab-pane fade" id="nav-list" role="tabpanel" aria-labelledby="nav-list-tab">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">Incident ID</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Time</th>
+                    <th scope="col">Location</th>
+                  </tr>
+                </thead>
+                <tbody id="incident-list">
+                </tbody>
+              </table>
+              <nav aria-label="Incident navigation">
+                <ul class="pagination justify-content-center">
+                  <li class="page-item disabled" id="prev-page-container">
+                    <a class="page-link" id="prev-page-link" aria-disabled="true">Previous</a>
+                  </li>
+                  <li class="page-item" id="next-page-container">
+                    <a class="page-link" id="next-page-link">Next</a>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </div>
         </div>
       </form>
     </div>
