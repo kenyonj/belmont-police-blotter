@@ -223,7 +223,7 @@ function setupPaginationButtons() {
     } else {
       prevPageContainer.classList.add("disabled");
       prevPageLink.ariaDisabled = true;
-      urlSearchParams.set("offset", params["limit"]);
+      urlSearchParams.set("offset", params["limit"] || 0);
       const nextNewRelativePathQuery = window.location.pathname + '?' + urlSearchParams.toString();
       nextPageLink.setAttribute("href", nextNewRelativePathQuery);
     }
