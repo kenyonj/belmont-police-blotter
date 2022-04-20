@@ -133,11 +133,10 @@
                 aria-labelledby="panelsStayOpen-headingTwo">
                 <div class="accordion-body">
                   <div class="row">
-                    <div class="input-group mb-3 col">
+                    <div class="input-group mb-3 col ui-widget">
                       <span class="input-group-text" id="street-name-label">Street name</span>
                       <input list="streets" name="distance_from" class="form-control" id="street-name-input"
                         aria-label="Stree name and optional number" aria-describedby="street-name-label">
-                      <datalist id="streets"></datalist>
                     </div>
                     <div class="input-group mb-3 col">
                       <div class="input-group-prepend">
@@ -175,7 +174,9 @@
           <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade show active" id="nav-map" role="tabpanel" aria-labelledby="nav-map-tab">
               <h3><span id="incident-count"></span> Incidents:</h3>
-              <div id="dvMap" style="height: 500px"></div>
+              <div id="dvMap" style="height: 500px">
+                No Results
+              </div>
             </div>
             <div class="tab-pane fade" id="nav-list" role="tabpanel" aria-labelledby="nav-list-tab">
               <table class="table table-hover">
@@ -189,6 +190,9 @@
                   </tr>
                 </thead>
                 <tbody id="incident-list">
+                  <tr>
+                    <td>No Results</td>
+                  </tr>
                 </tbody>
               </table>
               <nav aria-label="Incident navigation">

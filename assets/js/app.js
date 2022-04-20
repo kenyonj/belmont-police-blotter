@@ -153,20 +153,7 @@ function updateIncidentCount(count) {
 }
 
 function updateStreetsDataList() {
-  const dataListContainer = document.getElementById("streets");
-
-  if (dataListContainer) {
-    const streets = getStreets();
-
-    streets.forEach(street => dataListContainer.appendChild(createStreetOption(street)));
-  }
-}
-
-function createStreetOption(street) {
-  const option = document.createElement("option");
-  option.value = street;
-  option.innerText = street;
-  return option;
+  $("#street-name-input").autocomplete({ source: availableStreets() });
 }
 
 function conditionallyShowMapOrList() {
@@ -232,7 +219,7 @@ function setupPaginationButtons() {
   }
 }
 
-function getStreets() {
+function availableStreets() {
   return [
     "A ST",
     "ACORN PARK DR",

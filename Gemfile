@@ -20,8 +20,10 @@ gem "json"
 gem "pdf-reader"
 gem "geocoder"
 gem "fileutils"
+gem "webrick", "~> 1.7"
 
 group :test do
   gem "pry"
   gem "rspec"
 end
+

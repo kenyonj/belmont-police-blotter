@@ -320,6 +320,7 @@ GEM
       unf_ext
     unf_ext (0.0.8.1)
     unicode-display_width (1.8.0)
+    webrick (1.7.0)
     xpath (3.2.0)
       nokogiri (~> 1.8)
     zeitwerk (2.5.4)
@@ -343,6 +344,7 @@ DEPENDENCIES
   rspec
   tzinfo (~> 1.2)
   tzinfo-data
+  webrick (~> 1.7)
 
 BUNDLED WITH
    2.1.4
