@@ -53,7 +53,6 @@ class FileListing
   def previously_parsed?
     return @_previously_parsed if defined?(@_previously_parsed)
 
-
     parsed_dates = (start_date..end_date).each_with_object(
       Hash.new { |outer_h, outer_k| outer_h[outer_k] = Hash.new { |h, k| h[k] = [] } },
     ) do |date, dates|
