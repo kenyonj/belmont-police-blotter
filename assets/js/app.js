@@ -112,6 +112,12 @@ function createTable(markers) {
   const table = document.getElementById("incident-list");
 
   if (table) {
+    const noResultsRow = document.getElementById("no-results-row");
+
+    if (noResultsRow) {
+      noResultsRow.remove();
+    }
+
     markers.forEach(marker => table.appendChild(createTableRow(marker)));
   }
 }
