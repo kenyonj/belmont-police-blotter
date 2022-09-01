@@ -9,6 +9,8 @@ class FileListing
   def initialize(node)
     link = node.css("a")
     start_date, end_date = link.inner_html.split(".").first.split("-")
+    start_date = "%08d" % start_date
+    end_date = "%08d" % end_date
 
     @start_date = Date.strptime(start_date, EXISTING_DATE_FORMAT)
     @end_date = Date.strptime(end_date, EXISTING_DATE_FORMAT)
