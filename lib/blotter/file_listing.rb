@@ -12,6 +12,8 @@ class FileListing
     start_date = [start_date.slice!(-4..-1), start_date.slice!(-2..-1), start_date].reverse.join("-")
     end_date = [end_date.slice!(-4..-1), end_date.slice!(-2..-1), end_date].reverse.join("-")
 
+    puts "start_date: #{start_date}"
+    puts "end_date: #{end_date}"
     @start_date = Date.strptime(start_date, EXISTING_DATE_FORMAT)
     @end_date = Date.strptime(end_date, EXISTING_DATE_FORMAT)
     @pdf_href = link.first.attributes["href"].value
