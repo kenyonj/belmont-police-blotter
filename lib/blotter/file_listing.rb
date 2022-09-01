@@ -1,6 +1,6 @@
 class FileListing
   # example file name: 03072022-03132022.pdf as of 2022-03-16
-  EXISTING_DATE_FORMAT = "%m%d%Y"
+  EXISTING_DATE_FORMAT = "%m-%d-%Y"
   NEW_DATE_FORMAT = "%Y-%m-%d"
   OUTPUT_PATH = "db/pdfs/"
 
@@ -9,8 +9,8 @@ class FileListing
   def initialize(node)
     link = node.css("a")
     start_date, end_date = link.inner_html.split(".").first.split("-")
-    start_date = "%08d" % start_date.to_i
-    end_date = "%08d" % end_date.to_i
+    start_date = [start_date.slice!(-4..-1), start_date.slice!(-2..-1), start_date].reverse.join("-")
+    end_date = [end_date.slice!(-4..-1), end_date.slice!(-2..-1), end_date].reverse.join("-")
 
     @start_date = Date.strptime(start_date, EXISTING_DATE_FORMAT)
     @end_date = Date.strptime(end_date, EXISTING_DATE_FORMAT)
