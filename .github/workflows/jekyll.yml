@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' || github.event_name == 'push' }}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - uses: actions/cache@v2
       with:
@@ -24,6 +24,6 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gems-
 
-    - uses:  helaili/jekyll-action@v2
+    - uses:  helaili/jekyll-action@v2.4
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
