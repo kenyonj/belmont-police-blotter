@@ -24,6 +24,6 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gems-
 
-    - uses:  helaili/jekyll-action@v2.4
+    - uses:  actions/jekyll-build-pages@v1.0.6
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
