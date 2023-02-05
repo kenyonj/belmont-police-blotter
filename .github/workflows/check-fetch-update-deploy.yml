@@ -1,4 +1,4 @@
-name: Build
+name: Check, Fetch, Update, and Deploy
 
 on:
   workflow_dispatch:
