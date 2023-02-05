@@ -78,4 +78,4 @@ jobs:
     steps:
       - name: 🚀 deploy
         id: deployment
-        uses: actions/deploy-pages@v1.2.3
+        uses: actions/deploy-pages@v1.2.4
