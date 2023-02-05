@@ -24,7 +24,7 @@ jobs:
         run: curl "https://www.belmontpd.org/resident-resources/pages/police-blotter" -o data.json
       - name: Fetch Cache
         id: cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: data.json
           key: ${{ hashFiles('data.json') }}
@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ needs.check.outputs.cache-hit != 'true' || github.event_name == 'workflow_dispatch'  }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.6
@@ -65,7 +65,7 @@ jobs:
         id: pages
         uses: actions/configure-pages@v3
       - name: 🔨 install dependencies & build site
-        uses: actions/jekyll-build-pages@v1.0.6
+        uses: actions/jekyll-build-pages@v1.0.7
       - name: ⚡️ upload artifact
         uses: actions/upload-pages-artifact@v1
 
@@ -78,4 +78,4 @@ jobs:
     steps:
       - name: 🚀 deploy
         id: deployment
-        uses: actions/deploy-pages@v1.2.3
+        uses: actions/deploy-pages@v1.2.4
