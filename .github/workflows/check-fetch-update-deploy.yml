@@ -44,7 +44,7 @@ jobs:
           bundler-cache: true
       - name: Fetch the new PDFs and parse them
         run: bundle exec rake fetch_and_parse_all_pdfs
-      - uses: EndBug/add-and-commit@v7
+      - uses: EndBug/add-and-commit@v9
         with:
           author_name: Justin Kenyon
           author_email: kenyonj@gmail.com
