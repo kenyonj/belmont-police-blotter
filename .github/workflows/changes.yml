@@ -1,28 +1,81 @@
-name: Check for changes
+name: Build
 
 on:
   workflow_dispatch:
   schedule:
     - cron:  "0 5 * * *" # 5 AM UTC every day
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
 jobs:
   check:
     runs-on: ubuntu-latest
+    outputs:
+      cache-hit: ${{ steps.hit.outputs.cachehit }}
     steps:
       - name: Fetch data
         run: curl "https://www.belmontpd.org/resident-resources/pages/police-blotter" -o data.json
-
       - name: Fetch Cache
         id: cache
         uses: actions/cache@v2
         with:
           path: data.json
           key: ${{ hashFiles('data.json') }}
+      - name: Output cache hit results
+        id: hit
+        run: echo "cachehit=${{ steps.cache.outputs.cache-hit }}" >> $GITHUB_OUTPUT
+        
+  fetch:
+    needs: check
+    runs-on: ubuntu-latest
+    if: ${{ needs.check.outputs.cache-hit != 'true' || github.event_name == 'workflow_dispatch'  }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.6
+          bundler-cache: true
+      - name: Fetch the new PDFs and parse them
+        run: bundle exec rake fetch_and_parse_all_pdfs
+      - uses: EndBug/add-and-commit@v7
+        with:
+          author_name: Justin Kenyon
+          author_email: kenyonj@gmail.com
+          message: "Adding newly parsed incidents (GitHub Actions)"
+             
+  build:
+    needs: fetch
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📂 checkout
+        uses: actions/checkout@v3
+      - name: 💎 setup ruby
+        uses: ruby/setup-ruby@ee2113536afb7f793eed4ce60e8d3b26db912da4 # v1.127.0
+        with:
+          bundler-cache: true
+          cache-version: 0
+      - name: 📄 setup pages
+        id: pages
+        uses: actions/configure-pages@v3
+      - name: 🔨 install dependencies & build site
+        uses: actions/jekyll-build-pages@v1.0.6
+      - name: ⚡️ upload artifact
+        uses: actions/upload-pages-artifact@v1
 
-      - name: Page has changed
-        run: exit 0
-        if: steps.cache.outputs.cache-hit != 'true'
-
-      - name: Page has not changed
-        run: exit 1
-        if: steps.cache.outputs.cache-hit == 'true'
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: 🚀 deploy
+        id: deployment
+        uses: actions/deploy-pages@v1.2.3
