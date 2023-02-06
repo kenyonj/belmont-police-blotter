@@ -17,7 +17,6 @@ concurrency:
 jobs:
   check:
     runs-on: ubuntu-latest
-    if: ${{ github.event_name != 'workflow_dispatch'  }}
     outputs:
       cache-hit: ${{ steps.cache.outputs.cache-hit }}
     steps:
