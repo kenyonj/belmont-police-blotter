@@ -18,7 +18,7 @@ jobs:
   check:
     runs-on: ubuntu-latest
     outputs:
-      cache-hit: ${{ steps.hit.outputs.cachehit }}
+      cache-hit: ${{ steps.cache.outputs.cache-hit }}
     steps:
       - name: Fetch data
         run: curl "https://www.belmontpd.org/resident-resources/pages/police-blotter" -o data.json
@@ -28,15 +28,12 @@ jobs:
         with:
           path: data.json
           key: ${{ hashFiles('data.json') }}
-      - name: Output cache hit results
-        id: hit
-        run: echo "cachehit=${{ steps.cache.outputs.cache-hit }}" >> $GITHUB_OUTPUT
         
   fetch:
     needs: check
     runs-on: ubuntu-latest
     outputs:
-      commited-changes: ${{ steps.commit.outputs.committedchanges }}
+      commited-changes: ${{ steps.add-and-commit.outputs.committed }}
     if: ${{ needs.check.outputs.cache-hit != 'true' || github.event_name == 'workflow_dispatch'  }}
     steps:
       - uses: actions/checkout@v3
@@ -52,9 +49,6 @@ jobs:
           author_name: Justin Kenyon
           author_email: kenyonj@gmail.com
           message: "Adding newly parsed incidents (GitHub Actions)"
-      - name: Output committed changes results
-        id: commit
-        run: echo "commitedchanges=${steps.add-and-commit.outputs.committed }}" >> $GITHUB_OUTPUT
              
   build:
     needs: fetch
