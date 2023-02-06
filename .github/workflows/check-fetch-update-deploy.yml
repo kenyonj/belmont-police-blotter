@@ -35,6 +35,8 @@ jobs:
   fetch:
     needs: check
     runs-on: ubuntu-latest
+    outputs:
+      commited-changes: ${{ steps.commit.outputs.committedchanges }}
     if: ${{ needs.check.outputs.cache-hit != 'true' || github.event_name == 'workflow_dispatch'  }}
     steps:
       - uses: actions/checkout@v3
@@ -49,10 +51,14 @@ jobs:
           author_name: Justin Kenyon
           author_email: kenyonj@gmail.com
           message: "Adding newly parsed incidents (GitHub Actions)"
+      - name: Output committed changes results
+        id: commit
+        run: echo "commitedchanges=${steps.add-and-commit.outputs.committed }}" >> $GITHUB_OUTPUT
              
   build:
     needs: fetch
     runs-on: ubuntu-latest
+    if: ${{ needs.fetch.outputs.committed-changes == 'true' }}
     steps:
       - name: 📂 checkout
         uses: actions/checkout@v3
