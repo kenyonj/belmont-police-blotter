@@ -49,6 +49,7 @@ jobs:
         run: |
           git config --global user.name "Justin Kenyon"
           git config --global user.email "kenyonj@gmail.com"
+          git add .
           git commit -a -m "Adding newly parsed incidents (GitHub Actions)"
           git push
              
