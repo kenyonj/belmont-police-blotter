@@ -36,11 +36,13 @@ jobs:
       commited-changes: ${{ steps.add-and-commit.outputs.committed }}
     if: ${{ needs.check.outputs.cache-hit != 'true' || github.event_name == 'workflow_dispatch'  }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: ruby/setup-ruby@v1
+      - name: 📂 checkout
+        uses: actions/checkout@v3
+      - name: 💎 setup ruby
+        uses: ruby/setup-ruby@ee2113536afb7f793eed4ce60e8d3b26db912da4 # v1.127.0
         with:
-          ruby-version: 2.6
           bundler-cache: true
+          cache-version: 0
       - name: Fetch the new PDFs and parse them
         run: bundle exec rake fetch_and_parse_all_pdfs
       - uses: EndBug/add-and-commit@v9
