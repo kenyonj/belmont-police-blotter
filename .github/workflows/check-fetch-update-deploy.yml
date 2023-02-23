@@ -45,12 +45,12 @@ jobs:
           cache-version: 0
       - name: Fetch the new PDFs and parse them
         run: bundle exec rake fetch_and_parse_all_pdfs
-      - uses: EndBug/add-and-commit@v9
-        id: add-and-commit
-        with:
-          author_name: Justin Kenyon
-          author_email: kenyonj@gmail.com
-          message: "Adding newly parsed incidents (GitHub Actions)"
+      - name: Commit and push all changed files
+        run: |
+          git config --global user.name "Justin Kenyon"
+          git config --global user.email "kenyonj@gmail.com"
+          git commit -a -m "Adding newly parsed incidents (GitHub Actions)"
+          git push
              
   build:
     needs: fetch
