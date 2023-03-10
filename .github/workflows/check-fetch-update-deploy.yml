@@ -45,7 +45,12 @@ jobs:
           cache-version: 0
       - name: Fetch the new PDFs and parse them
         run: bundle exec rake fetch_and_parse_all_pdfs
+      - name: Check for changed files
+        id: changed-files-check
+        run: |
+          echo "FILES_CHANGED=$(git diff --name-only | xargs)" >> $GITHUB_OUTPUT
       - name: Commit and push all changed files
+        if: ${{ steps.changed-files-check.outputs.FILES_CHANGED != '' }}
         run: |
           git config --global user.name "Justin Kenyon"
           git config --global user.email "kenyonj@gmail.com"
