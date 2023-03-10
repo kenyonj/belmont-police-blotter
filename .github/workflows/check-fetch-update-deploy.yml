@@ -39,7 +39,7 @@ jobs:
       - name: 📂 checkout
         uses: actions/checkout@v3
       - name: 💎 setup ruby
-        uses: ruby/setup-ruby@d3c9825d67b0d8720afdfdde5af56c79fdb38d16 # v1.138.0
+        uses: ruby/setup-ruby@9669f3ee51dc3f4eda8447ab696b3ab19a90d14b # v1.144.0
         with:
           bundler-cache: true
           cache-version: 0
@@ -61,7 +61,7 @@ jobs:
       - name: 📂 checkout
         uses: actions/checkout@v3
       - name: 💎 setup ruby
-        uses: ruby/setup-ruby@d3c9825d67b0d8720afdfdde5af56c79fdb38d16 # v1.138.0
+        uses: ruby/setup-ruby@9669f3ee51dc3f4eda8447ab696b3ab19a90d14b # v1.144.0
         with:
           bundler-cache: true
           cache-version: 0
