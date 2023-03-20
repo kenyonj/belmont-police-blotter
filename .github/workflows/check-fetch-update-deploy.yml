@@ -33,7 +33,7 @@ jobs:
     needs: check
     runs-on: ubuntu-latest
     outputs:
-      commited-changes: ${{ steps.add-and-commit.outputs.committed }}
+      commited-changes: ${{ steps.changed-files-check.outputs.FILES_CHANGED }}
     if: ${{ needs.check.outputs.cache-hit != 'true' || github.event_name == 'workflow_dispatch'  }}
     steps:
       - name: 📂 checkout
@@ -48,7 +48,7 @@ jobs:
       - name: Check for changed files
         id: changed-files-check
         run: |
-          echo "FILES_CHANGED=$(git diff --name-only | xargs)" >> $GITHUB_OUTPUT
+          echo "FILES_CHANGED=$(git diff --name-only)" >> $GITHUB_OUTPUT
       - name: Commit and push all changed files
         if: ${{ steps.changed-files-check.outputs.FILES_CHANGED != '' }}
         run: |
@@ -61,7 +61,7 @@ jobs:
   build:
     needs: fetch
     runs-on: ubuntu-latest
-    if: ${{ needs.fetch.outputs.committed-changes == 'true' }}
+    if: ${{ needs.fetch.outputs.committed-changes != '' }}
     steps:
       - name: 📂 checkout
         uses: actions/checkout@v3
