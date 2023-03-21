@@ -49,6 +49,7 @@ jobs:
         id: changed-files-check
         run: |
           echo "FILES_CHANGED=$(git diff --name-only)" >> $GITHUB_OUTPUT
+          echo $GITHUB_OUTPUT
       - name: Commit and push all changed files
         if: ${{ steps.changed-files-check.outputs.FILES_CHANGED != '' }}
         run: |
