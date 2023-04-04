@@ -62,7 +62,7 @@ jobs:
   build:
     needs: fetch
     runs-on: ubuntu-latest
-    if: ${{ needs.fetch.outputs.committed-changes != '' }}
+    if: ${{ needs.fetch.outputs.committed-changes != '' || github.event_name == 'workflow_dispatch' }}
     steps:
       - name: 📂 checkout
         uses: actions/checkout@v3
