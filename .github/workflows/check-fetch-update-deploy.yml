@@ -51,7 +51,6 @@ jobs:
           echo "FILES_CHANGED=$(git diff --name-only)" >> $GITHUB_OUTPUT
           echo $GITHUB_OUTPUT
       - name: Commit and push all changed files
-        if: ${{ false }}
         run: |
           git config --global user.name "Justin Kenyon"
           git config --global user.email "kenyonj@gmail.com"
