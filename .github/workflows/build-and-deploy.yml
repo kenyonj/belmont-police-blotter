@@ -1,10 +1,10 @@
+name: Build & Deploy
+
 on:
-  - workflow_dispatch
-job:  
+  workflow_dispatch:
+jobs:  
   build:
-    needs: fetch
     runs-on: ubuntu-latest
-    if: ${{ needs.fetch.outputs.committed-changes != '' || github.event_name == 'workflow_dispatch' }}
     steps:
       - name: 📂 checkout
         uses: actions/checkout@v3
