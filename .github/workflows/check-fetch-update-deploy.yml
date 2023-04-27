@@ -1,4 +1,4 @@
-name: Check, Fetch, Update, and Deploy
+name: Fetch and Commit
 
 on:
   workflow_dispatch:
