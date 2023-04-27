@@ -13,28 +13,13 @@ permissions:
 concurrency:
   group: "pages"
   cancel-in-progress: true
+  
+env:
+  DATE_TIME: ${{ github.event.time }}
 
-jobs:
-  check:
-    runs-on: ubuntu-latest
-    outputs:
-      cache-hit: ${{ steps.cache.outputs.cache-hit }}
-    steps:
-      - name: Fetch data
-        run: curl "https://www.belmontpd.org/resident-resources/pages/police-blotter" -o data.json
-      - name: Fetch Cache
-        id: cache
-        uses: actions/cache@v3
-        with:
-          path: data.json
-          key: ${{ hashFiles('data.json') }}
-        
+jobs:   
   fetch:
-    needs: check
     runs-on: ubuntu-latest
-    outputs:
-      commited-changes: ${{ steps.changed-files-check.outputs.FILES_CHANGED }}
-    if: ${{ needs.check.outputs.cache-hit != 'true' || github.event_name == 'workflow_dispatch'  }}
     steps:
       - name: 📂 checkout
         uses: actions/checkout@v3
@@ -45,46 +30,11 @@ jobs:
           cache-version: 0
       - name: Fetch the new PDFs and parse them
         run: bundle exec rake fetch_and_parse_all_pdfs
-      - name: Check for changed files
-        id: changed-files-check
-        run: |
-          echo "FILES_CHANGED=$(git diff --name-only)" >> $GITHUB_OUTPUT
-          echo $GITHUB_OUTPUT
       - name: Commit and push all changed files
         run: |
+          echo $DATE_TIME > last_pulled.txt
           git config --global user.name "Justin Kenyon"
           git config --global user.email "kenyonj@gmail.com"
           git add .
-          git commit -a -m "Adding newly parsed incidents (GitHub Actions)"
+          git commit -a -m "Committing latest data for incidents."
           git push
-             
-  build:
-    needs: fetch
-    runs-on: ubuntu-latest
-    if: ${{ needs.fetch.outputs.committed-changes != '' || github.event_name == 'workflow_dispatch' }}
-    steps:
-      - name: 📂 checkout
-        uses: actions/checkout@v3
-      - name: 💎 setup ruby
-        uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf # v1.146.0
-        with:
-          bundler-cache: true
-          cache-version: 0
-      - name: 📄 setup pages
-        id: pages
-        uses: actions/configure-pages@v3
-      - name: 🔨 install dependencies & build site
-        uses: actions/jekyll-build-pages@v1.0.7
-      - name: ⚡️ upload artifact
-        uses: actions/upload-pages-artifact@v1
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: 🚀 deploy
-        id: deployment
-        uses: actions/deploy-pages@v2.0.1
