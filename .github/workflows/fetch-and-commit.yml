@@ -1,4 +1,4 @@
-name: Fetch and Commit
+name: Fetch & Commit
 
 on:
   workflow_dispatch:
