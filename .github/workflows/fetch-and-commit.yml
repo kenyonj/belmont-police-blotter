@@ -29,7 +29,7 @@ jobs:
         run: bundle exec rake fetch_and_parse_all_pdfs
       - name: Commit and push all changed files
         run: |
-          echo $GITHUB_DATETIME > last_pulled.txt
+          echo "$(date)" > last_pulled.txt
           git config --global user.name "Justin Kenyon"
           git config --global user.email "kenyonj@gmail.com"
           git add .
