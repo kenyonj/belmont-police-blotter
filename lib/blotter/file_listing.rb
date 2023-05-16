@@ -12,6 +12,7 @@ class FileListing
     # override for known bad end date in file listing
     end_date = "03202022" if end_date == "0320022"
     start_date = "01302023" if start_date == "013302023"
+    start_date = "05082033" if start_date == "050820223"
     start_date = [start_date.slice!(-4..-1), start_date.slice!(-2..-1), start_date].reverse.join("-")
     end_date = [end_date.slice!(-4..-1), end_date.slice!(-2..-1), end_date].reverse.join("-")
 
