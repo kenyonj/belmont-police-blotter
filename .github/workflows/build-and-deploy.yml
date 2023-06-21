@@ -5,6 +5,8 @@ on:
   push:
     paths:
     - '_incidents/**'
+  schedule:
+    - cron:  "* 3 * * 1,4" # 3 AM UTC every Monday & Thursday
   
 permissions:
   contents: write
