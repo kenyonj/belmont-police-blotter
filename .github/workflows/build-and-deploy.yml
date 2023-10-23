@@ -2,8 +2,9 @@ name: Build & Deploy
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron:  "* 3 * * 1,4" # 3 AM UTC every Monday & Thursday
+  # belmont police blotter is no longer being published, so I'm stopping the scheduled build
+  # schedule:
+    # - cron:  "* 3 * * 1,4" # 3 AM UTC every Monday & Thursday
   
 permissions:
   contents: write
