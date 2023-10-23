@@ -2,8 +2,9 @@ name: Fetch & Commit
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron:  "0 5 * * *" # 5 AM UTC every day
+  # belmont police blotter is no longer being published, so I'm stopping the scheduled fetch
+  # schedule:
+    # - cron:  "0 5 * * *" # 5 AM UTC every day
 
 permissions:
   contents: write
