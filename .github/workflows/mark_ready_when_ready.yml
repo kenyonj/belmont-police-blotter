@@ -1,0 +1,48 @@
+name: Mark PR Ready When Ready
+
+on:
+  pull_request:
+    types:
+      - opened
+      - labeled
+      - unlabeled
+      - synchronize
+
+permissions:
+  actions: read
+  checks: read
+  contents: write
+  pull-requests: write
+  statuses: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  wait_for_workflows:
+    name: Mark as ready after successful workflow suite
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    if: |
+      contains(github.event.pull_request.labels.*.name, 'Mark Ready When Ready') &&
+      github.event.pull_request.draft == true
+    steps:
+      - name: Wait for checks to be added
+        run: sleep 20
+        
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          
+      - name: Wait for workflows
+        run: gh pr checks ${{ github.event.pull_request.number }} --watch
+
+      - name: Mark as ready
+        if: |
+          contains(github.event.pull_request.labels.*.name, 'Mark Ready When Ready') &&
+          github.event.pull_request.draft == true &&
+          steps.wait.outcome == 'success'
+        run: gh pr ready ${{ github.event.pull_request.number }}

@@ -1,0 +1,23 @@
+name: Just wait 300 seconds
+on:
+  pull_request:
+    types:
+      - opened
+      - labeled
+      - unlabeled
+      - synchronize
+
+permissions:
+  actions: read
+  checks: read
+  contents: write
+  pull-requests: write
+  statuses: read
+
+jobs:
+  wait_for_waiting:
+    name: Just wait
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pause
+        run: sleep 300
