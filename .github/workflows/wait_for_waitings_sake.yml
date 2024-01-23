@@ -1,5 +1,4 @@
-name: Mark PR Ready When Ready
-
+name: Just wait 300 seconds
 on:
   pull_request:
     types:
