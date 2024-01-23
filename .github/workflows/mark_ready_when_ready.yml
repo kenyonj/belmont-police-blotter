@@ -166,7 +166,7 @@ jobs:
 
             let timer = 0;
 
-            await sleep(5);
+            await sleep(20);
 
             console.log(
               `Waiting time ${timer}s out of ${MAX_TIMEOUT}s with polling interval ${POLLING_INTERVAL}s`,
