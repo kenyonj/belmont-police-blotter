@@ -23,24 +23,19 @@ jobs:
   wait_for_workflows:
     name: Mark as ready after successful workflow suite
     runs-on: ubuntu-latest
-    
+    env:
+      GH_TOKEN: ${{ github.token }}
     if: |
       contains(github.event.pull_request.labels.*.name, 'Mark Ready When Ready') &&
       github.event.pull_request.draft == true
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Wait for checks to be added
+        run: sleep 20
 
       - name: Wait for workflows
-        env:
-          GH_TOKEN: ${{ github.token }}
         run: gh pr checks ${{ github.event.pull_request.number }} --watch
 
       - name: Mark as ready
-        env:
-          GH_TOKEN: ${{ github.token }}
         if: |
           contains(github.event.pull_request.labels.*.name, 'Mark Ready When Ready') &&
           github.event.pull_request.draft == true &&
