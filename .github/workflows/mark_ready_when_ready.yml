@@ -27,7 +27,7 @@ jobs:
     name: Mark as ready after successful workflow suite
     runs-on: ubuntu-latest
     if: |
-      contains(github.event.pull_request.labels.*.name, env.TARGET_LABEL_NAME) &&
+      contains(github.event.pull_request.labels.*.name, ${{ env.TARGET_LABEL_NAME }}) &&
       github.event.pull_request.draft == true
     steps:
       - name: Checkout repository
@@ -200,7 +200,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         if: |
-          contains(github.event.pull_request.labels.*.name, env.TARGET_LABEL_NAME) &&
+          contains(github.event.pull_request.labels.*.name, ${{ env.TARGET_LABEL_NAME }}) &&
           github.event.pull_request.draft == true &&
           steps.wait.outcome == 'success'
         run: gh pr ready ${{ github.event.pull_request.number }}
