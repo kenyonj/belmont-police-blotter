@@ -31,7 +31,12 @@ jobs:
     steps:
       - name: Wait for checks to be added
         run: sleep 20
-
+        
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          
       - name: Wait for workflows
         run: gh pr checks ${{ github.event.pull_request.number }} --watch
 
